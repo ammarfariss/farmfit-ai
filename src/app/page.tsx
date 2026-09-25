@@ -218,7 +218,7 @@ function ResultsPanel({ result, siteData, onReset }: { result: PortfolioResult; 
     </div>
 
     <div className="metric-grid">
-      {[["Annual revenue", money(result.annualRevenueQar)], ["Annual profit", money(result.annualProfitQar)], ["CapEx", money(result.capexQar)], ["Annual OpEx", money(result.annualOpexQar)], ["Water", `${Math.round(result.waterM3).toLocaleString()} m³`], ["Energy", `${Math.round(result.energyKwh).toLocaleString()} kWh`], ["Site fit", result.siteFitPct === null ? "Baseline" : `${Math.round(result.siteFitPct)}%`], ["Yield", `${Math.round(result.annualYieldKg).toLocaleString()} kg/yr`]].map(([label, value]) => <div className="metric" key={label}><span>{label}</span><strong>{value}</strong></div>)}
+      {[["Annual revenue", money(result.annualRevenueQar)], ["Annual profit", money(result.annualProfitQar)], ["CapEx", money(result.capexQar)], ["Annual OpEx", money(result.annualOpexQar)], ["Water", `${Math.round(result.waterM3).toLocaleString()} m³`], ["Energy", `${Math.round(result.energyKwh).toLocaleString()} kWh`], ["Site fit", result.siteFitPct === null ? "Baseline" : `${Math.round(result.siteFitPct)}%`], ["Yield", `${Math.round(result.annualYieldKg).toLocaleString()} kg/yr`], ["ROI if revenue -20%", `${Math.round(result.roi5YearRevenueStress * 100)}%`]].map(([label, value]) => <div className="metric" key={label}><span>{label}</span><strong>{value}</strong></div>)}
     </div>
 
     <div className="decision-card">
@@ -256,6 +256,7 @@ function ResultsPanel({ result, siteData, onReset }: { result: PortfolioResult; 
           <span><b>{siteData.nearby?.roads ?? "—"}</b>major roads in 3 km</span>
           <span><b>{siteData.qatarDatasets?.length ?? "—"}</b>Qatar datasets found</span>
         </div>
+        <small className="source-method">Scored in site fit: temperature · wind · soil pH. Context only: solar · market/road access · Qatar dataset discovery.</small>
         {siteData.warning && <small className="source-warning">{siteData.warning}</small>}
       </> : <small>External context unavailable; the baseline plan remains transparent.</small>}
     </div>
@@ -275,6 +276,6 @@ function ResultsPanel({ result, siteData, onReset }: { result: PortfolioResult; 
     </div>
 
     <div className="why"><h4>Why this plan?</h4>{result.explanations.map((explanation) => <p key={explanation}><span>↗</span>{explanation}</p>)}</div>
-    <p className="result-note">Decision-support prototype · values are scenario estimates from explicit, replaceable assumptions.</p>
+    <p className="result-note">Decision-support prototype · values are scenario estimates from explicit, replaceable assumptions. The -20% revenue stress test keeps the same farm layout and changes revenue only.</p>
   </div>;
 }
