@@ -47,6 +47,8 @@ Repository evidence now includes:
 - automated Vitest tests;
 - live API integrations with fallbacks;
 - explainable site-aware ranking using temperature, wind and soil pH;
+- missing-data-safe site weighting;
+- downside revenue sensitivity shown beside the headline ROI;
 - MapLibre/Turf geospatial rendering;
 - exact local run instructions.
 
