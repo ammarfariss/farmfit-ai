@@ -3,7 +3,7 @@ import { CROPS, MODEL_ASSUMPTIONS, TECHNIQUES, type CropId, type TechniqueId } f
 export type SiteContext = { temperatureC?: number | null; soilPh?: number | null; windMps?: number | null };
 export type Allocation = { cropId: CropId; techniqueId: TechniqueId; areaM2: number; percentage: number; annualYieldKg: number; annualRevenueQar: number; annualOpexQar: number; capexQar: number; waterM3: number; energyKwh: number; siteFit: number };
 export type OptimizerInput = { areaM2: number; budgetQar: number; waterLimitM3: number; energyLimitKwh: number; crops: readonly CropId[]; techniques: readonly TechniqueId[]; priceOverrides?: Partial<Record<CropId, number>>; siteContext?: SiteContext };
-export type PortfolioResult = { allocations: Allocation[]; totalAreaM2: number; capexQar: number; annualOpexQar: number; annualRevenueQar: number; annualProfitQar: number; annualYieldKg: number; waterM3: number; energyKwh: number; paybackYears: number; roi5Year: number; sharedInfrastructureQar: number; siteFitPct: number | null; siteContextUsed: boolean; explanations: string[] };
+export type PortfolioResult = { allocations: Allocation[]; totalAreaM2: number; availableAreaM2: number; capexQar: number; annualOpexQar: number; annualRevenueQar: number; annualProfitQar: number; annualYieldKg: number; waterM3: number; energyKwh: number; paybackYears: number; roi5Year: number; sharedInfrastructureQar: number; siteFitPct: number | null; siteContextUsed: boolean; explanations: string[] };
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value));
@@ -111,6 +111,7 @@ export function optimizePortfolio(input: OptimizerInput): PortfolioResult {
     return {
       allocations: [],
       totalAreaM2: 0,
+      availableAreaM2: usableArea,
       capexQar: 0,
       annualOpexQar: 0,
       annualRevenueQar: 0,
@@ -190,6 +191,7 @@ export function optimizePortfolio(input: OptimizerInput): PortfolioResult {
   return {
     allocations,
     totalAreaM2: allocations.reduce((sum, item) => sum + item.areaM2, 0),
+    availableAreaM2: usableArea,
     capexQar,
     annualOpexQar,
     annualRevenueQar,
