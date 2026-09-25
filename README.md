@@ -46,7 +46,7 @@ The current API route attempts to retrieve:
 
 If an external service fails, FarmFit keeps the remaining sources, labels unavailable sources, and falls back only where necessary. External requests use timeouts so one slow provider does not block the demo.
 
-**Current site-aware behavior:** temperature and wind from NASA POWER plus soil pH from SoilGrids are passed into an explainable site-fit adjustment that can change crop/system ranking. Solar irradiation, humidity, nearby-road/market counts and Qatar Open Data catalog results are currently displayed as context but do not yet affect the score.
+**Current site-aware behavior:** temperature and wind from NASA POWER plus soil pH from SoilGrids are passed into an explainable site-fit adjustment that can change crop/system ranking. Missing site factors are excluded from the site-fit weighting rather than silently treated as perfect data. Solar irradiation, humidity, nearby-road/market counts and Qatar Open Data catalog results are currently displayed as context but do not yet affect the score.
 
 ## Land / GIS status
 
@@ -68,7 +68,8 @@ It:
 6. grows the best-ranked zones while directly enforcing land, budget, water and energy limits;
 7. reports the tightest binding constraint and any unallocated reserve land;
 8. calculates shared infrastructure cost, annual profit, payback and 5-year ROI;
-9. applies a concentration-risk penalty when one strategy dominates the allocated portfolio.
+9. shows a simple **-20% revenue stress case** on the same farm layout;
+10. applies a concentration-risk penalty when one strategy dominates the allocated portfolio.
 
 It does **not** currently use:
 - ML training;
