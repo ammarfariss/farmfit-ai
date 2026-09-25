@@ -1,174 +1,99 @@
-# FarmFit AI — Project Specification
+# FarmFit AI — Implemented MVP Specification
 
-**Project:** FarmFit AI  
 **Challenge:** Reboot the Earth 2026 — Challenge 1  
-**Status:** Hackathon MVP specification  
-**Scope:** Site suitability + crop/system recommendation + farm investment scenario planning
+**Status:** Working hackathon prototype
 
-## 1. Problem
+## Implemented user journey
 
-Farm planning is a coupled decision problem.
+1. Select one or more demo Al Khor plots.
+2. Select crops.
+3. Select production techniques.
+4. Enter:
+   - budget;
+   - annual water limit;
+   - annual energy limit.
+5. Run the portfolio optimizer.
+6. View:
+   - crop/system allocation;
+   - annual yield;
+   - annual revenue;
+   - annual profit;
+   - CapEx;
+   - annual OpEx;
+   - water;
+   - energy;
+   - payback;
+   - 5-year ROI.
+7. View the allocation on a MapLibre map.
+8. View site-context data from available external sources.
 
-A farmer or investor must simultaneously consider:
+## Implemented crops
 
-- land area and spatial layout;
-- crop choice;
-- production system;
-- site suitability;
-- water;
-- energy;
-- investment budget;
-- operating cost;
-- expected yield;
-- market context;
-- risk.
+- Tomato
+- Cucumber
+- Lettuce
+- Bell pepper
+- Strawberry
 
-Optimizing each decision independently can produce a locally attractive option that is poor for the farm as a whole.
+## Implemented systems
 
-## 2. Core Value Proposition
+- Open field
+- Conventional greenhouse
+- Hydroponic greenhouse
+- Vertical hydroponics
 
-**FarmFit designs the best farm portfolio, not just the best crop.**
-
-The system evaluates combinations of crops, production systems and land allocations under explicit constraints, then presents a portfolio-level plan and scenario metrics.
-
-## 3. User Journey
-
-### Inputs
-
-1. Select one or more plots.
-2. Select candidate crops.
-3. Select available production systems.
-4. Set constraints:
-   - CapEx budget;
-   - water limit;
-   - energy limit;
-   - optional payback / return / risk preferences.
-5. Review or adjust scenario assumptions.
-
-### Decision Engine
-
-The engine should:
-
-- load available site/context data;
-- reject infeasible combinations;
-- evaluate crop × technique × area allocations;
-- calculate financial and resource consequences;
-- rank or optimize feasible portfolios;
-- preserve enough intermediate information to explain the recommendation.
-
-### Outputs
-
-- 2D land-allocation visual;
-- crop/system mix;
-- expected annual yield;
-- projected revenue;
-- CapEx;
-- OpEx;
-- water demand;
-- energy demand;
-- estimated payback;
-- risk / uncertainty indicators;
-- assumptions and constraints.
-
-## 4. Supported Production-System Categories
-
-The product concept can support:
-
-- open field;
-- shade house;
-- greenhouse;
-- hydroponics / substrate systems;
-- vertical farming.
-
-The final list in the presentation must match the prototype.
-
-## 5. Site-Suitability Dimensions
-
-The official Challenge 1 framing makes the following dimensions relevant:
-
-- solar exposure;
-- wind / dust risk;
-- soil salinity;
-- water availability;
-- market access.
-
-The final prototype does not have to implement every possible data layer, but the presentation must clearly distinguish **implemented**, **approximated** and **future** layers.
-
-## 6. Portfolio Optimization
-
-### Decision Variables
-
-The central decision is the area allocated to crop/system combinations.
-
-### Constraints
-
-At minimum, the model may include:
+## Implemented constraints
 
 - land area;
-- budget;
-- water;
-- energy;
-- suitability/feasibility.
+- CapEx budget;
+- annual water limit;
+- annual energy limit;
+- crop/system compatibility;
+- minimum technique area.
 
-### Objective
+## Implemented optimization method
 
-A final implementation may maximize annual net benefit or a transparent weighted score while reporting ROI/payback separately.
+FarmFit currently uses a deterministic scoring + greedy-allocation heuristic.
 
-The exact objective function must match the code.
+It is transparent and resource-constrained, but it is not currently a global mathematical optimizer.
 
 See [MODEL_CARD.md](MODEL_CARD.md).
 
-## 7. Spatial Output
+## Implemented site context
 
-The 2D layout should communicate **management allocation**, not engineering design.
+- NASA POWER climatology;
+- OSM/Overpass market and road proximity;
+- SoilGrids pH when available;
+- Qatar Open Data catalog discovery.
 
-It may show:
+The current optimizer does not yet use these site variables in its score.
 
-- crop/system zones;
-- area shares;
-- labels;
-- resource/economic summary.
+## Implemented spatial output
 
-Do not call it a construction-ready design.
+The app renders crop-allocation blocks over representative plot polygons.
 
-## 8. Data Philosophy
+This is a **management visualization**, not construction-ready spatial planning.
 
-1. Prefer authoritative/open sources.
-2. Record exact provenance.
-3. Treat coarse environmental layers as indicators, not parcel measurements.
-4. Separate measured/source-derived data from scenario assumptions.
-5. Keep external service lock-in low where practical.
+## Prepared but not active
 
-See [DATA_SOURCES.md](DATA_SOURCES.md).
+- environment-variable adapter for a Qatar cadastral FeatureServer.
 
-## 9. Challenge Boundary / Non-Goals
+## Not implemented
 
-FarmFit is **not** a Challenge 2 cold-chain product.
-
-The canonical scope excludes:
-
-- cold-storage sensors;
+- official cadastral parcel selection;
+- salinity scoring;
+- dust-risk modelling;
+- water-availability GIS;
+- live market-price feeds;
+- transport-cost optimization;
+- ML training;
 - spoilage prediction;
-- shelf-life prediction;
-- shipment rerouting;
-- “88% accurate” spoilage ML.
+- Pareto optimization;
+- exhaustive thousands-of-layout search;
+- GLPK-based solver in the current optimization path.
 
-These features appeared in an earlier research specification but were removed because they belong to the separate cold-chain challenge and were not supported by FarmFit implementation evidence.
+## MVP value proposition
 
-## 10. MVP Success Test
+**FarmFit designs a constrained farm portfolio rather than recommending one crop in isolation.**
 
-A convincing MVP should demonstrate this end-to-end path:
-
-1. user selects/defines land;
-2. user chooses crops and systems;
-3. user sets constraints;
-4. engine evaluates feasible alternatives;
-5. engine returns an optimized portfolio;
-6. UI shows the allocation and financial/resource outputs;
-7. user can explain why the output was chosen.
-
-## 11. Submission Truth Rule
-
-**What the pitch says, what the README says, and what the code does must agree.**
-
-Any feature not present in code should be labelled planned/future rather than demonstrated.
+The current prototype demonstrates the end-to-end workflow and makes assumptions visible enough to be challenged and improved.
