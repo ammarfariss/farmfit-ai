@@ -2,40 +2,38 @@
 
 FarmFit AI source code is licensed under the **MIT License**.
 
-External data, APIs, map data and third-party libraries keep their own licences and terms.
+External datasets, APIs, map data, tiles/styles and software libraries retain their own licences and terms.
 
-## Current Licence / Terms Register
+## Current Register
 
-| Resource | Type | Licence / Terms | Attribution / Action | Status |
-|---|---|---|---|---|
-| FarmFit AI code | Software | MIT | Keep LICENSE and copyright notice | Active |
-| Leaflet | Software library | BSD-2-Clause | Retain licence/attribution if used | Verify after code push |
-| OpenStreetMap data | Open data | ODbL | Credit “© OpenStreetMap contributors” and link licence | Verify after code push |
-| NASA POWER | Scientific data/API | Open NASA data; follow dataset-specific notices | Cite POWER service/version/access date per POWER referencing guide | Verify after code push |
-| NASA MERRA-2 | Scientific data | NASA Earth-science data terms / dataset citation | Cite exact collection + DOI if used | Verify after code push |
-| FAO GloSIS / GSASmap | Data platform/datasets | Dataset-specific FAO terms must be checked | Record exact layer licence before redistribution | Verify after code push |
-| Qatar public/open data | Data | Dataset-specific terms | Record exact portal dataset + licence | TBD |
-| Mapbox | Commercial API | Proprietary service terms | Requires valid access token; not an open-source dependency | Only if actually used |
+| Resource | Current role | Licence / terms note | Status |
+|---|---|---|---|
+| FarmFit AI code | Application source | MIT | Active |
+| Next.js / React / Recharts | Web application UI | Open-source package licences; keep package metadata/notices | Active |
+| MapLibre GL JS | Interactive map rendering | Open-source; retain required notices | Active |
+| Turf | Geometry helpers | Open-source package licence | Active |
+| OpenStreetMap data | Market/road context and map attribution | ODbL; retain “© OpenStreetMap contributors” attribution | Active |
+| CARTO Positron | Basemap style/tiles | CARTO service/attribution terms apply in addition to OSM attribution | Active |
+| NASA POWER | Climate data/API | Follow NASA POWER data-service citation and referencing guidance | Active |
+| SoilGrids / ISRIC | Soil pH service | Dataset/service-specific licence and attribution apply | Active when available |
+| Qatar Open Data portal | Dataset-catalog discovery | Dataset-specific portal terms apply | Active for catalog discovery |
 
-## Open-Source Notes
+## Not Used in the Current MVP
 
-- MIT is an **OSI-approved** open-source licence.
-- OpenStreetMap data are open data, but ODbL obligations still apply.
-- Leaflet is open-source software under BSD-2-Clause.
-- “Publicly accessible” does **not** automatically mean “openly redistributable.”
-- A commercial API can be technically useful without being open source. If one is used, disclose it rather than presenting the entire stack as open.
+The final code does **not** use Leaflet, Mapbox, MERRA-2 or FAO GloSIS/GSASmap in the active application path.
 
-## NASA Attribution
+## Attribution Rule
 
-If NASA POWER data are used, record:
+Publicly accessible data are not automatically unrestricted. The repository and presentation should name the actual source used and preserve source-specific attribution.
 
-- service name;
-- version;
+## NASA POWER
+
+For a production/public deployment, record:
+- POWER service used;
+- variables requested;
 - date accessed;
-- variables requested.
+- applicable version/referencing guidance.
 
-NASA POWER explicitly requests citation of the project and data service.
+## Submission Check
 
-## Before Submission
-
-Once dependencies and APIs are visible in the final code, update this table with exact package versions and licences.
+The final dependency list is represented by `package.json` / `package-lock.json`. Unused GLPK was removed from the project before submission.
