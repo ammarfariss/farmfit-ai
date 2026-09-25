@@ -1,119 +1,97 @@
 # Reboot the Earth 2026 — Judging Alignment
 
-This file maps the project to the final judging criteria and identifies what evidence must be visible during the demo.
-
 ## 1. Problem & Functionality
 
-**What FarmFit should prove**
+### Present in the MVP
+- plot selection;
+- crop selection;
+- production-system selection;
+- budget/water/energy inputs;
+- portfolio generation;
+- financial/resource outputs;
+- map visualization;
+- site-context API route.
 
-- real farm-planning problem;
-- user can enter land/crops/systems/constraints;
-- optimizer produces a result;
-- outputs are understandable.
-
-**Demo evidence**
-
-- one complete user journey;
-- no broken screens;
-- clear before/after decision.
+### Demo priority
+Show one complete flow without switching away from the app.
 
 ## 2. Innovation & Originality
 
-**Core differentiation**
+The strongest differentiation is **portfolio-level allocation**:
 
-FarmFit optimizes the **farm portfolio**, not merely one crop or one technology.
+> FarmFit does not only ask “which crop?” It asks how limited land should be divided across crops and production systems under financial and resource limits.
 
-Show interaction between:
-
-- crop;
-- production system;
-- area;
-- budget;
-- water;
-- energy;
-- risk/economics.
-
-Avoid overstating novelty. Explain exactly what the prototype does differently.
+Do not overstate the current site-intelligence integration: site context is displayed but not yet used in the optimizer.
 
 ## 3. Ambition & Scope
 
-Ambition comes from integrating:
+The prototype combines:
+- land;
+- crop/system selection;
+- financial constraints;
+- water/energy constraints;
+- portfolio economics;
+- spatial visualization;
+- external site context.
 
-- site intelligence;
-- crop/system choice;
-- resource constraints;
-- finance;
-- spatial allocation.
-
-Scope discipline matters too. FarmFit stays inside **Challenge 1** rather than adding an unrelated cold-chain subsystem.
+That is sufficient ambition for an MVP without adding Challenge 2 cold-chain features.
 
 ## 4. Technical Feasibility
 
-Judges should be able to see:
-
-- actual source code;
-- exact optimizer method;
-- exact data/API calls;
-- constraints;
-- assumptions;
-- reproducible run instructions;
-- limitations.
-
-Do not present planned architecture as implemented architecture.
+Repository evidence now includes:
+- Next.js/React/TypeScript implementation;
+- optimizer source;
+- explicit assumptions;
+- automated Vitest tests;
+- live API integrations with fallbacks;
+- MapLibre/Turf geospatial rendering;
+- exact local run instructions.
 
 ## 5. Communication & Impact
 
-The 5-minute pitch should communicate:
+Pitch the working flow, not the future roadmap.
 
-1. problem;
-2. why current isolated recommendations are insufficient;
-3. FarmFit portfolio approach;
-4. live/recorded prototype flow;
-5. measurable outputs;
-6. sustainability/open-source value;
-7. realistic next step.
+Strong phrase:
+
+> “FarmFit designs the farm portfolio, not just the crop.”
 
 ## 6. Open Source & Adaptability
 
-Repository evidence should include:
-
-- MIT LICENSE;
+Present:
+- MIT licence;
+- readable source;
+- package lock;
 - README;
-- run instructions;
-- dependency list;
-- source/data attribution;
 - model card;
-- assumptions;
+- data-source register;
 - limitations;
-- contribution guidance;
-- no committed secrets.
+- contribution and security docs.
 
-A judge should understand how another team could adapt FarmFit to another arid region.
+Before submission, confirm:
+- `npm test` passes;
+- `npm run build` passes;
+- no credentials are committed.
 
-## 7. Sustainability & UN SDGs
+## 7. Sustainability & SDGs
 
-Use the strongest direct links:
+Use:
+- SDG 2.4;
+- SDG 6.4;
+- SDG 9;
+- SDG 12.2.
 
-- **SDG 2.4** — sustainable/resilient food production;
-- **SDG 6.4** — water-use efficiency;
-- **SDG 9** — innovation and sustainable infrastructure;
-- **SDG 12.2** — efficient use of natural resources.
+Explain the trade-off:
+controlled-environment systems may save water while increasing energy and capital demand.
 
-Also show trade-offs: water savings may come with higher energy or CapEx.
+## Final submission gate
 
-## Final Submission Gate
-
-Before submission, answer YES to all:
-
-- [ ] Repository code runs.
-- [ ] README has exact run instructions.
-- [ ] No secrets/tokens are committed.
-- [ ] Every claimed API/dataset is actually used or clearly labelled future.
-- [ ] Every external dependency is attributable.
-- [ ] Optimizer description matches code.
-- [ ] Demo outputs match presentation screenshots/numbers.
-- [ ] No Challenge 2 spoilage/cold-chain claims remain in core FarmFit story.
-- [ ] Financial outputs are labelled scenario estimates.
-- [ ] Data resolution/uncertainty is disclosed.
-- [ ] MIT licence remains present.
-- [ ] Presentation fits 5 minutes.
+- [ ] `npm test` passes
+- [ ] `npm run build` passes
+- [x] MIT licence present
+- [x] README run instructions present
+- [x] Challenge 2 claims removed from core story
+- [x] Actual optimizer method documented
+- [x] Implemented data sources documented
+- [x] Demo-vs-official GIS distinction documented
+- [x] Financial outputs labelled scenario estimates
+- [ ] Final presentation screenshots/numbers match the current app
