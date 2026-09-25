@@ -36,6 +36,18 @@ describe("farm portfolio model", () => {
     expect(blocks[0].geometry.geometry.coordinates[0][2][0]).toBeCloseTo(blocks[1].geometry.geometry.coordinates[0][0][0]);
   });
 
+  it("returns a clear infeasible result when infrastructure alone exceeds budget", () => {
+    const result = optimizePortfolio({ ...input, budgetQar: 10000 });
+    expect(result.allocations).toHaveLength(0);
+    expect(result.capexQar).toBe(0);
+    expect(result.explanations[0]).toContain("No feasible portfolio");
+  });
+
+  it("does not claim hydroponics when only open field is selected", () => {
+    const result = optimizePortfolio({ ...input, techniques: ["open-field"] as const, budgetQar: 500000 });
+    expect(result.explanations.join(" ")).toContain("non-hydroponic");
+  });
+
   it("uses declared demo plot area for layout labels", () => {
     const plot = polygon(
       [[[51.5, 25.7], [51.51, 25.7], [51.51, 25.71], [51.5, 25.71], [51.5, 25.7]]],
