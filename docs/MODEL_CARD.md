@@ -40,6 +40,8 @@ The final ranking combines:
 - 60% normalized economic score;
 - 40% site-fit score.
 
+Within site fit, temperature / soil pH / wind are weighted only when that factor is actually available. Missing factors are removed and the remaining weights are renormalized, so an unavailable source does not receive a hidden perfect score.
+
 These weights are prototype assumptions declared in `src/lib/model/assumptions.ts`.
 
 ## Allocation heuristic
@@ -111,6 +113,10 @@ Do not describe the current MVP as:
 - exhaustive search across thousands of layouts;
 - guaranteed optimal;
 - driven by real-time parcel-level soil/water measurements.
+
+## Revenue downside sensitivity
+
+The results screen also reports a simple **-20% revenue stress ROI**. It keeps the selected farm layout, CapEx, OpEx and resource use unchanged and reduces annual revenue by 20%. This is a sensitivity indicator, not a re-optimized forecast.
 
 ## Intended use
 
