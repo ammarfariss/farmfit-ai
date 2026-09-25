@@ -16,7 +16,8 @@ It is not a trained ML model and it is not currently a mathematical-programming 
 - annual energy limit;
 - selected crops;
 - selected production techniques;
-- optional crop-price overrides.
+- optional crop-price overrides;
+- optional site context: temperature, wind speed and soil pH.
 
 ## Compatibility filtering
 
@@ -30,7 +31,12 @@ For each valid crop/system pair, the code calculates a per-square-metre five-yea
 (5 × annual revenue - CapEx - 5 × annual OpEx) / CapEx
 ```
 
-Pairs are sorted from highest to lowest score.
+When site context is available, the economic score is adjusted by an explainable site-fit factor:
+- crop temperature range versus site temperature;
+- system-specific protection from temperature and wind exposure;
+- soil pH mismatch, with open-field systems treated as more soil-dependent than hydroponic/vertical systems.
+
+The adjustment can lower the ranking of crop/system combinations that are less suited to the selected site. Pairs are then sorted from highest to lowest adjusted score.
 
 ## Allocation heuristic
 
@@ -81,9 +87,9 @@ The current MVP does not contain a full climate-risk, salinity-risk, market-vola
 
 ## Site-data relationship
 
-NASA POWER, SoilGrids, OpenStreetMap and Qatar Open Data context is displayed in the interface after optimization.
+NASA POWER temperature/wind and SoilGrids pH can influence the ranking through the site-fit adjustment.
 
-These values are **not currently used by the optimizer**.
+NASA solar/humidity, OpenStreetMap market/road context and Qatar Open Data catalog results are currently displayed for context but do not yet change the optimizer score.
 
 ## Explainability
 
@@ -96,7 +102,7 @@ Do not describe the current MVP as:
 - machine learning;
 - AI trained on Qatar farm data;
 - Pareto optimization;
-- linear programming / GLPK optimization;
+- linear or mixed-integer mathematical programming;
 - exhaustive search across thousands of layouts;
 - guaranteed optimal;
 - driven by real-time parcel-level soil/water measurements.
