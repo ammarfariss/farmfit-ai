@@ -5,127 +5,136 @@
 Built for **Reboot the Earth Global Tech Challenge 2026 — Doha, Qatar**  
 Challenge 1: **AI for Site/Facility Suitability and Crop/System Recommendation**
 
-## What FarmFit Solves
+## What the current MVP actually does
 
-Farmers and agricultural investors with limited land must decide more than simply **what crop to grow**. They must also decide:
+FarmFit lets a user:
 
-- how much land to allocate to each crop;
-- which production technique to use;
-- how to stay within budget, water and energy constraints;
-- how to balance expected yield, revenue, CapEx, OpEx and risk; and
-- where each farm component should be placed.
+1. select one or more **demo farm plots near Al Khor**;
+2. choose candidate crops;
+3. choose production systems;
+4. set budget, annual water and annual energy limits;
+5. run a transparent portfolio-allocation heuristic;
+6. receive crop/system allocations, CapEx, OpEx, revenue, annual profit, water use, energy use, payback and 5-year ROI;
+7. view the resulting crop zones on a 2D map;
+8. load a site-context snapshot from external open/public services.
 
-FarmFit AI treats this as a **farm-portfolio optimization problem** rather than a collection of isolated recommendations.
+The current prototype is a **decision-support MVP**, not a production agronomy or investment system.
 
-## Challenge Scope
+## Implemented crop and system choices
 
-FarmFit is deliberately scoped to **Challenge 1**.
+### Crops
+- Tomato
+- Cucumber
+- Lettuce
+- Bell pepper
+- Strawberry
 
-It is designed around the three Challenge 1 themes:
+### Production systems
+- Open field
+- Conventional greenhouse
+- Hydroponic greenhouse
+- Vertical hydroponics
 
-1. **Site suitability intelligence** — geographic and environmental context.
-2. **Crop / production-system recommendation** — open field, greenhouse, hydroponic, vertical farming and other supported systems.
-3. **Farm investment scenario planning** — yield, resources, CapEx, OpEx, revenue, payback and risk.
+## Implemented site-context sources
 
-**Cold-chain monitoring, shelf-life prediction and spoilage ML are not part of the canonical FarmFit scope.** Those belong to Challenge 2 and are excluded unless the team explicitly changes challenge.
+The current API route attempts to retrieve:
 
-## Core Workflow
+- **NASA POWER climatology** — temperature, solar irradiation, humidity and wind;
+- **OpenStreetMap via Overpass API** — nearby markets and major roads;
+- **SoilGrids** — 0–5 cm soil pH when available;
+- **Qatar Open Data** — catalog search results only, used for dataset discovery.
 
-```text
-Select land plot(s)
-        ↓
-Choose crops + production techniques
-        ↓
-Set budget / water / energy / return constraints
-        ↓
-Load available site + scenario data
-        ↓
-Check feasibility and suitability
-        ↓
-Evaluate crop × technique × land-allocation combinations
-        ↓
-Portfolio optimization
-        ↓
-2D farm-management plan
-        ↓
-Yield | Revenue | CapEx | OpEx | Water/Energy | Payback | Risk
+If external requests fail, the prototype falls back to a clearly labelled demo climate baseline.
+
+**Important:** these environmental/context values are currently displayed to the user but are **not yet inputs to the portfolio scoring algorithm**.
+
+## Land / GIS status
+
+The map currently uses representative **demo polygons near Al Khor**.
+
+An adapter for a future Qatar cadastral FeatureServer is present in the code, but it is not currently wired into the main user interface. The prototype must therefore be described as using **demo GIS plots**, not official cadastral parcels.
+
+## How the optimizer works
+
+The current MVP uses an explainable **deterministic heuristic**, not machine learning.
+
+It:
+
+1. filters incompatible crop/system pairs;
+2. scores valid pairs using a five-year economic score per unit area;
+3. ranks them;
+4. greedily allocates area to up to four crop/system combinations;
+5. scales the portfolio down when necessary to respect budget, water and energy limits;
+6. calculates shared infrastructure cost, annual profit, payback and 5-year ROI;
+7. applies a simple concentration-risk penalty when one allocation becomes too dominant.
+
+It does **not** currently use:
+- ML training;
+- Pareto optimization;
+- a GLPK solver in the actual optimizer code;
+- thousands of exhaustively evaluated layouts;
+- environmental site data in the optimization objective.
+
+## Run locally
+
+Requirements:
+- Node.js
+- npm
+
+```bash
+git clone https://github.com/ammarfariss/farmfit-ai.git
+cd farmfit-ai
+npm install
+npm run dev
 ```
 
-## Intended Inputs
+Open the local URL shown by Next.js, normally:
 
-- One or multiple land plots
-- Candidate crops
-- Available production techniques
-- Budget
-- Water constraint
-- Energy constraint
-- Optional return/risk preferences
-- Environmental and geographic inputs where available
-- Explicit financial and agronomic assumptions
+```text
+http://localhost:3000
+```
 
-## Intended Outputs
+Run the model tests with:
 
-- Recommended crop/system portfolio
-- Land allocation by crop/system
-- 2D farm-management layout
-- Expected yield estimate
-- Revenue estimate
-- CapEx estimate
-- OpEx estimate
-- Water and energy-use estimates
-- Payback estimate
-- Risk indicators
-- Assumptions and trade-offs used to produce the result
+```bash
+npm test
+```
 
-## Differentiation
+Build a production bundle with:
 
-Many agricultural tools focus on crop suitability or evaluate one production option at a time.
+```bash
+npm run build
+```
 
-FarmFit is designed to optimize the **whole farm as a portfolio**, combining crop choice, production technique, area allocation, site constraints, resources and economics in one decision workflow.
+## Main technology stack
 
-## Responsible Decision Support
+- Next.js
+- React
+- TypeScript
+- MapLibre GL
+- Turf
+- Recharts
+- Vitest
 
-FarmFit is a hackathon prototype and should be treated as **decision support**, not agricultural, engineering, regulatory or investment advice.
+## Responsible-use note
 
-The project does not claim guaranteed yield, profit, payback, regulatory approval or parcel-level accuracy where source data are coarse. Implementation-specific claims must match the final code.
+Financial, agronomic and infrastructure values in the prototype include scenario assumptions. Outputs are estimates for comparison and demonstration, not guaranteed yield, profit, payback, regulatory approval or engineering design.
 
-## Open Source
+## Open source
 
-FarmFit AI is released under the **MIT License**, an OSI-approved open-source licence.
-
-The repository is structured for inspection, reuse and adaptation. External datasets, APIs, map data and libraries keep their own licences and attribution requirements.
+FarmFit AI is released under the **MIT License**.
 
 See:
-
-- [Open Source & DPG Readiness](docs/OPEN_SOURCE_AND_DPG.md)
-- [Data Licences & Attribution](docs/DATA_LICENSES.md)
-- [Contributing](CONTRIBUTING.md)
-- [Security](SECURITY.md)
-
-## Documentation
-
 - [Project Specification](docs/PROJECT_SPEC.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Model Card](docs/MODEL_CARD.md)
 - [Data Sources](docs/DATA_SOURCES.md)
 - [Data Licences](docs/DATA_LICENSES.md)
-- [Evidence Base](docs/EVIDENCE_BASE.md)
 - [Assumptions](docs/ASSUMPTIONS.md)
 - [Limitations](docs/LIMITATIONS.md)
 - [Sustainability](docs/SUSTAINABILITY.md)
+- [Open Source & DPG Readiness](docs/OPEN_SOURCE_AND_DPG.md)
 - [Judging Alignment](docs/JUDGING_ALIGNMENT.md)
-
-## Prototype Status
-
-**Active hackathon development.**
-
-The documentation distinguishes between:
-
-- **verified external facts**;
-- **intended product behavior**; and
-- **features actually implemented in the prototype**.
-
-Before submission, the README, model card, data register and run instructions must be reconciled against the final code.
 
 ## Hackathon
 
