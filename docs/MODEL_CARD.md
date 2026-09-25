@@ -31,25 +31,32 @@ For each valid crop/system pair, the code calculates a per-square-metre five-yea
 (5 × annual revenue - CapEx - 5 × annual OpEx) / CapEx
 ```
 
-When site context is available, the economic score is adjusted by an explainable site-fit factor:
-- crop temperature range versus site temperature;
+Economic scores are normalized across the candidate set. When live site context is available, an explainable site-fit score is calculated from:
+- crop temperature range versus NASA POWER climatology;
 - system-specific protection from temperature and wind exposure;
 - soil pH mismatch, with open-field systems treated as more soil-dependent than hydroponic/vertical systems.
 
-The adjustment can lower the ranking of crop/system combinations that are less suited to the selected site. Pairs are then sorted from highest to lowest adjusted score.
+The final ranking combines:
+- 60% normalized economic score;
+- 40% site-fit score.
+
+These weights are prototype assumptions declared in `src/lib/model/assumptions.ts`.
 
 ## Allocation heuristic
 
-The implementation then:
+The final implementation:
 
-1. treats 94% of selected area as usable;
-2. allocates land greedily to ranked crop/system pairs;
-3. limits the portfolio to at most four allocations;
-4. applies system-specific minimum-area assumptions;
-5. assigns remaining land to the first-ranked allocation;
-6. uniformly scales allocations down if budget, water or energy limits would be exceeded.
+1. treats 94% of the selected plot as usable;
+2. ranks compatible crop/system pairs;
+3. attempts to seed the minimum viable area for the best-ranked pairs, up to four zones;
+4. skips any candidate whose minimum viable block would violate land, budget, water or energy constraints;
+5. grows retained zones in rank order while enforcing all hard limits directly;
+6. applies the documented concentration threshold when more than one zone is feasible;
+7. reports the tightest binding constraint and unallocated reserve land.
 
-This is a heuristic. It should not be described as a proof of global optimality.
+The optimizer does **not** shrink already-selected zones below their technique-specific minimum area.
+
+This remains a transparent heuristic, not a proof of global mathematical optimality.
 
 ## Financial calculations
 
@@ -79,9 +86,7 @@ A prototype shared-infrastructure discount is applied.
 
 ## Risk treatment
 
-Current risk handling is limited to a **portfolio concentration penalty**.
-
-If one allocation exceeds the configured concentration threshold, a fixed penalty is subtracted from five-year ROI.
+Current risk handling includes a diversification cap during allocation where multiple zones are feasible, plus a concentration penalty when one strategy still dominates the allocated portfolio.
 
 The current MVP does not contain a full climate-risk, salinity-risk, market-volatility or probabilistic risk model.
 

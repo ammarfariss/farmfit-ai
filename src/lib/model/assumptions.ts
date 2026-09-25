@@ -44,6 +44,7 @@ export const TECHNIQUES: Technique[] = [
 ];
 
 export const MODEL_ASSUMPTIONS = {
+  usableAreaFactor: 0.94,
   usableSetbackM: 3,
   sharedWaterInfrastructureQar: 24000,
   sharedEnergyInfrastructureQar: 42000,
@@ -51,6 +52,8 @@ export const MODEL_ASSUMPTIONS = {
   sharedInfrastructureDiscount: 0.18,
   concentrationRiskThreshold: 0.55,
   concentrationRiskPenalty: 0.06,
+  economicScoreWeight: 0.6,
+  siteScoreWeight: 0.4,
   defaultBudgetQar: 500000,
   defaultWaterLimitM3: 22000,
   defaultEnergyLimitKwh: 130000,

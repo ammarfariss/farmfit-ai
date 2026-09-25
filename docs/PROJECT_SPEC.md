@@ -5,7 +5,7 @@
 
 ## Implemented user journey
 
-1. Select one or more demo Al Khor plots.
+1. Select one representative demo Al Khor plot.
 2. Select crops.
 3. Select production techniques.
 4. Enter:
@@ -25,7 +25,7 @@
    - payback;
    - 5-year ROI.
 7. View the allocation on a MapLibre map.
-8. View site-context data from available external sources.
+8. View site-context data, source readiness, site fit and the tightest binding constraint.
 
 ## Implemented crops
 
@@ -53,9 +53,9 @@
 
 ## Implemented optimization method
 
-FarmFit currently uses a deterministic scoring + greedy-allocation heuristic.
+FarmFit currently uses a deterministic site-aware ranking + minimum-viable-zone allocation heuristic.
 
-It is transparent and resource-constrained, but it is not currently a global mathematical optimizer.
+It directly enforces land, budget, water and energy limits, preserves minimum technique areas, reports the binding constraint, and remains transparent rather than claiming global mathematical optimality.
 
 See [MODEL_CARD.md](MODEL_CARD.md).
 

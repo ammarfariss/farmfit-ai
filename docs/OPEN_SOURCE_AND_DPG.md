@@ -37,8 +37,8 @@ https://www.digitalpublicgoods.net/standard
 | SDG relevance | Strong alignment with SDG 2, 6, 9, 12 | Keep mappings evidence-based |
 | Open licensing | MIT licence present | Keep LICENSE in root |
 | Clear ownership | Repository owner/team visible in Git history | Add final team names before submission |
-| Platform independence | Intended to run from source | Add exact local run instructions after code push |
-| Documentation | README + docs directory | Reconcile docs with final code |
+| Platform independence | Intended to run from source | Exact local run instructions are present |
+| Documentation | README + docs directory | Docs reconciled with final code |
 | Non-PII extraction | Farm planning should not require personal data | Do not collect unnecessary PII |
 | Privacy/law | Low-PII design; external APIs may have terms | Document services and privacy implications |
 | Open standards/best practices | Prefer GeoJSON, JSON, CSV and standard web formats | Record actual formats in architecture |
@@ -59,10 +59,12 @@ Before submission:
 
 ## Open Mapping
 
-If the final app uses:
+The final app uses:
 
-- **Leaflet** — BSD-2-Clause open-source library;
-- **OpenStreetMap data** — ODbL open data with attribution requirements.
+- **MapLibre GL JS** — open-source map rendering;
+- **Turf** — open-source geospatial helpers;
+- **OpenStreetMap data** — ODbL open data with attribution requirements;
+- **CARTO Positron** — basemap service/style with its own attribution and service terms.
 
 Do not confuse the software library, the underlying map data and the tile-hosting service; they can have different terms.
 

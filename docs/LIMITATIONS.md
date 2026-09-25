@@ -12,12 +12,11 @@ FarmFit AI is a hackathon decision-support prototype.
 - Wind is available from NASA POWER, but there is no implemented dust-risk model.
 - There is no implemented water-availability GIS layer.
 - OSM market/road context is displayed but does not yet alter the score or calculate transport cost.
-- The optimizer is a **greedy heuristic**, not a proof of the globally best solution.
+- The optimizer is a **transparent constrained heuristic**, not a proof of the globally best solution.
 - The current risk treatment is only a simple concentration penalty.
 - Crop yield, price, water, CapEx, OpEx and energy parameters contain prototype assumptions.
 - The 2D layout uses simple rectangular allocation blocks and is not an engineering layout.
-- When multiple plots are selected, the current map visual applies the same portfolio proportions to each selected plot rather than separately optimizing each parcel.
-- Site context is fetched for a selected plot centroid rather than performing full parcel-level spatial analysis.
+- Site context is fetched for the selected representative plot centroid rather than performing full parcel-level spatial analysis.
 - Outputs are scenario estimates, not guaranteed yields, profit or payback.
 
 ## Data-resolution limitations

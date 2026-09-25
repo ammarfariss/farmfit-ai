@@ -10,7 +10,9 @@
 - portfolio generation;
 - financial/resource outputs;
 - map visualization;
-- site-context API route.
+- resilient site-context API route with per-source readiness;
+- explainable decision trace and binding-constraint reporting;
+- explicit infeasible-plan handling instead of fabricated output.
 
 ### Demo priority
 Show one complete flow without switching away from the app.
@@ -49,8 +51,8 @@ Repository evidence now includes:
 - exact local run instructions.
 
 ### Verified build health — 25 Sep 2026
-- `npm test`: **5/5 tests passing** after consistency fixes.
-- `npm run build`: **production build compiled successfully** after the consistency patch.
+- PR CI on 25 Sep 2026: **tests passed and production build compiled successfully** after final hardening.
+- Final suite covers feasibility, hard constraints, minimum-area preservation, site-aware ranking, binding constraints, and map-area consistency.
 
 ## 5. Communication & Impact
 
@@ -90,8 +92,7 @@ controlled-environment systems may save water while increasing energy and capita
 
 ## Final submission gate
 
-- [x] latest `npm test` passes after final patch — 5/5 tests passed on 25 Sep 2026
-- [x] latest `npm run build` passes after final patch — production build compiled successfully on 25 Sep 2026
+- [x] final hardening PR CI passes tests and production build on 25 Sep 2026
 - [x] previous test run passed 4/4 before the consistency patch
 - [x] previous production build compiled successfully before the consistency patch
 - [x] MIT licence present
