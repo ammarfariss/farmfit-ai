@@ -66,7 +66,7 @@ See [MODEL_CARD.md](MODEL_CARD.md).
 - SoilGrids pH when available;
 - Qatar Open Data catalog discovery.
 
-The current optimizer does not yet use these site variables in its score.
+The current optimizer uses NASA temperature/wind and SoilGrids pH in an explainable site-fit adjustment. OSM market/road context and Qatar Open Data catalog results are currently informational only.
 
 ## Implemented spatial output
 
@@ -90,7 +90,7 @@ This is a **management visualization**, not construction-ready spatial planning.
 - spoilage prediction;
 - Pareto optimization;
 - exhaustive thousands-of-layout search;
-- GLPK-based solver in the current optimization path.
+- mathematical-programming solver / global-optimality proof.
 
 ## MVP value proposition
 
