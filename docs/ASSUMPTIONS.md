@@ -19,6 +19,8 @@ These values are scenario inputs for comparison, not guaranteed Qatar farm econo
 | Concentration-risk threshold | 55% |
 | Concentration-risk penalty | 0.06 on 5-year ROI |
 | Shared infrastructure discount | 18% |
+| Economic ranking weight | 60% |
+| Site-fit ranking weight | 40% |
 
 ## Shared infrastructure assumptions
 
@@ -72,7 +74,7 @@ For each technique, it stores:
 
 ## Interpretation
 
-These parameters are useful for a transparent MVP because judges can see how the calculation works.
+These parameters are useful for a transparent MVP because judges can see how the calculation works. The ranking weights and 94% usable-area factor are explicit prototype assumptions rather than hidden model behaviour.
 
 They must not be presented as audited engineering quotations or guaranteed commercial performance.
 
