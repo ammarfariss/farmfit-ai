@@ -1,134 +1,106 @@
 # FarmFit AI — Model Card
 
-## Purpose
+## Model type
 
-FarmFit AI is designed to optimize an agricultural land portfolio across candidate crops, production techniques and land allocations under resource, site and financial constraints.
+The current FarmFit MVP uses a **deterministic, rule-based portfolio heuristic**.
 
-## Problem Formulation
+It is not a trained ML model and it is not currently a mathematical-programming solver.
 
-Instead of asking only:
+## Inputs
 
-> Which crop is best?
+`optimizePortfolio()` receives:
 
-FarmFit asks:
+- total selected area;
+- budget limit;
+- annual water limit;
+- annual energy limit;
+- selected crops;
+- selected production techniques;
+- optional crop-price overrides.
 
-> Given this land, these candidate crops/systems and these constraints, what combination of crops, production systems and area allocations provides the strongest overall farm portfolio?
+## Compatibility filtering
 
-## Intended Inputs
+Only crop/system pairs listed as compatible in `src/lib/model/assumptions.ts` are considered.
 
-- selected plot(s);
-- candidate crops;
-- candidate production systems;
-- budget;
-- water limit;
-- energy limit;
-- environmental/site indicators;
-- market-access context where available;
-- financial and production assumptions;
-- optional risk/return preferences.
+## Pair scoring
 
-## Intended Outputs
+For each valid crop/system pair, the code calculates a per-square-metre five-year economic score:
 
-- crop/system portfolio;
-- area allocation;
-- expected yield estimate;
-- revenue estimate;
+```text
+(5 × annual revenue - CapEx - 5 × annual OpEx) / CapEx
+```
+
+Pairs are sorted from highest to lowest score.
+
+## Allocation heuristic
+
+The implementation then:
+
+1. treats 94% of selected area as usable;
+2. allocates land greedily to ranked crop/system pairs;
+3. limits the portfolio to at most four allocations;
+4. applies system-specific minimum-area assumptions;
+5. assigns remaining land to the first-ranked allocation;
+6. uniformly scales allocations down if budget, water or energy limits would be exceeded.
+
+This is a heuristic. It should not be described as a proof of global optimality.
+
+## Financial calculations
+
+The model calculates:
+
+- annual yield;
+- annual revenue;
+- annual operating cost;
 - CapEx;
-- OpEx;
-- water and energy use;
-- payback estimate;
-- risk/uncertainty indicators;
-- 2D farm-management layout;
-- visible assumptions and constraints.
+- annual water use;
+- annual energy use;
+- annual profit;
+- payback period;
+- five-year ROI.
 
-## Reference Mathematical Formulation
+Annual profit also subtracts prototype utility-cost assumptions for water and electricity.
 
-Let:
+## Shared infrastructure
 
-- (S) = candidate sub-plots;
-- (C) = candidate crops;
-- (T) = candidate production techniques;
-- (x_{s,c,t}) = area assigned to sub-plot (s), crop (c), technique (t).
+The model includes prototype costs for shared:
 
-A transparent implementation can optimize a score such as:
+- water infrastructure;
+- energy infrastructure;
+- cooling infrastructure.
 
-[
-\text{Score} =
-w_p \cdot \text{Profit}
-- w_w \cdot \text{WaterUse}
-- w_e \cdot \text{EnergyUse}
-- w_r \cdot \text{RiskPenalty}
-]
+A prototype shared-infrastructure discount is applied.
 
-subject to constraints including:
+## Risk treatment
 
-[
-\sum_{s,c,t} x_{s,c,t} \le A_{total}
-]
+Current risk handling is limited to a **portfolio concentration penalty**.
 
-[
-\sum_{s,c,t} CapEx_{s,c,t} \le Budget_{max}
-]
+If one allocation exceeds the configured concentration threshold, a fixed penalty is subtracted from five-year ROI.
 
-[
-\sum_{s,c,t} WaterUse_{s,c,t} \le Water_{max}
-]
+The current MVP does not contain a full climate-risk, salinity-risk, market-volatility or probabilistic risk model.
 
-[
-\sum_{s,c,t} EnergyUse_{s,c,t} \le Energy_{max}
-]
+## Site-data relationship
 
-and any minimum suitability / feasibility rules required by the implementation.
+NASA POWER, SoilGrids, OpenStreetMap and Qatar Open Data context is displayed in the interface after optimization.
 
-ROI and payback are preferably reported as output metrics rather than used as the only objective, because maximizing a ratio can produce unstable or misleading choices when investment is very small.
-
-## Algorithm Status
-
-The exact solver must match the final code.
-
-Do **not** claim:
-
-- “thousands of scenarios” unless the program actually evaluates that scale;
-- Pareto optimization unless a Pareto/multi-objective method is implemented;
-- machine learning unless an ML model is actually present;
-- trained Qatar-farm AI unless a real training dataset and evaluation exist.
-
-A deterministic constrained search can still be a valid, explainable decision engine if accurately described.
+These values are **not currently used by the optimizer**.
 
 ## Explainability
 
-For every recommended scenario, the interface should make it possible to understand:
+The optimizer is intentionally transparent: all major crop/system assumptions and calculations are readable in source code.
 
-- which constraints were active;
-- which assumptions were used;
-- why alternatives were rejected or scored lower;
-- the main financial/resource trade-offs;
-- uncertainty or data-resolution limitations.
+## Claims to avoid
 
-## Responsible AI / Decision Support
+Do not describe the current MVP as:
 
-FarmFit should:
+- machine learning;
+- AI trained on Qatar farm data;
+- Pareto optimization;
+- linear programming / GLPK optimization;
+- exhaustive search across thousands of layouts;
+- guaranteed optimal;
+- driven by real-time parcel-level soil/water measurements.
 
-- minimize collection of personal information;
-- keep API credentials outside source control;
-- expose assumptions;
-- avoid false precision;
-- distinguish measured data from scenario assumptions;
-- avoid claiming guarantees;
-- allow human users to override candidate crops/systems and constraints.
+## Intended use
 
-## Challenge Boundary
-
-Cold-chain spoilage prediction is not part of this model card because FarmFit is scoped to Challenge 1.
-
-## Intended Use
-
-Exploratory farm planning, comparative scenario analysis and hackathon demonstration.
-
-## Not Intended For
-
-- guaranteed investment returns;
-- engineering certification;
-- regulatory approval;
-- farm-level agronomic prescription without field validation;
-- autonomous farm management.
+Hackathon demonstration and exploratory farm-planning decision support.
