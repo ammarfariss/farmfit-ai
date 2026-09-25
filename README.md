@@ -9,11 +9,11 @@ Challenge 1: **AI for Site/Facility Suitability and Crop/System Recommendation**
 
 FarmFit lets a user:
 
-1. select one or more **demo farm plots near Al Khor**;
+1. select one representative **demo farm plot near Al Khor**;
 2. choose candidate crops;
 3. choose production systems;
 4. set budget, annual water and annual energy limits;
-5. run a transparent portfolio-allocation heuristic;
+5. run a transparent site-aware portfolio-allocation heuristic;
 6. receive crop/system allocations, CapEx, OpEx, revenue, annual profit, water use, energy use, payback and 5-year ROI;
 7. view the resulting crop zones on a 2D map;
 8. load a site-context snapshot from external open/public services.
@@ -44,7 +44,7 @@ The current API route attempts to retrieve:
 - **SoilGrids** — 0–5 cm soil pH when available;
 - **Qatar Open Data** — catalog search results only, used for dataset discovery.
 
-If external requests fail, the prototype falls back to a clearly labelled demo climate baseline.
+If an external service fails, FarmFit keeps the remaining sources, labels unavailable sources, and falls back only where necessary. External requests use timeouts so one slow provider does not block the demo.
 
 **Current site-aware behavior:** temperature and wind from NASA POWER plus soil pH from SoilGrids are passed into an explainable site-fit adjustment that can change crop/system ranking. Solar irradiation, humidity, nearby-road/market counts and Qatar Open Data catalog results are currently displayed as context but do not yet affect the score.
 
@@ -64,10 +64,11 @@ It:
 2. scores valid pairs using a five-year economic score per unit area;
 3. applies an explainable site-fit adjustment using temperature, wind and soil pH when available;
 4. ranks the adjusted crop/system pairs;
-5. greedily allocates area to up to four crop/system combinations;
-6. scales the portfolio down when necessary to respect budget, water and energy limits;
-7. calculates shared infrastructure cost, annual profit, payback and 5-year ROI;
-8. applies a simple concentration-risk penalty when one allocation becomes too dominant.
+5. seeds up to four minimum-viable crop/system zones when they are feasible;
+6. grows the best-ranked zones while directly enforcing land, budget, water and energy limits;
+7. reports the tightest binding constraint and any unallocated reserve land;
+8. calculates shared infrastructure cost, annual profit, payback and 5-year ROI;
+9. applies a concentration-risk penalty when one strategy dominates the allocated portfolio.
 
 It does **not** currently use:
 - ML training;
