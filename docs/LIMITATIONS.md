@@ -6,12 +6,12 @@ FarmFit AI is a hackathon decision-support prototype.
 
 - The selectable land parcels are **demo polygons near Al Khor**, not verified cadastral parcels.
 - An optional cadastral FeatureServer adapter exists but is not wired into the current UI.
-- NASA POWER, SoilGrids and OpenStreetMap context is shown to the user but does **not currently alter optimizer scoring**.
+- NASA POWER temperature/wind and SoilGrids pH can alter optimizer ranking, but this is a simplified explainable suitability layer rather than a calibrated agronomic model.
 - Qatar Open Data integration currently searches the catalog; it does not ingest agricultural dataset records into the model.
 - Soil integration is currently limited to **pH**, not salinity.
 - Wind is available from NASA POWER, but there is no implemented dust-risk model.
 - There is no implemented water-availability GIS layer.
-- Market access is represented by nearby OSM markets/roads, not a full transport-cost model.
+- OSM market/road context is displayed but does not yet alter the score or calculate transport cost.
 - The optimizer is a **greedy heuristic**, not a proof of the globally best solution.
 - The current risk treatment is only a simple concentration penalty.
 - Crop yield, price, water, CapEx, OpEx and energy parameters contain prototype assumptions.
