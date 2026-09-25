@@ -48,6 +48,25 @@ describe("farm portfolio model", () => {
     expect(result.explanations.join(" ")).toContain("non-hydroponic");
   });
 
+  it("uses site context in the explainable ranking path", () => {
+    const result = optimizePortfolio({
+      areaM2: 10000,
+      budgetQar: 5000000,
+      waterLimitM3: 100000,
+      energyLimitKwh: 1000000,
+      crops: ["lettuce"] as const,
+      techniques: ["open-field", "hydroponic"] as const,
+      siteContext: { temperatureC: 34, soilPh: 8.2, windMps: 7 },
+    });
+    const openField = result.allocations.find((item) => item.techniqueId === "open-field");
+    const hydroponic = result.allocations.find((item) => item.techniqueId === "hydroponic");
+    expect(result.siteContextUsed).toBe(true);
+    expect(result.siteFitPct).not.toBeNull();
+    expect(openField).toBeDefined();
+    expect(hydroponic).toBeDefined();
+    expect(hydroponic!.siteFit).toBeGreaterThan(openField!.siteFit);
+  });
+
   it("uses declared demo plot area for layout labels", () => {
     const plot = polygon(
       [[[51.5, 25.7], [51.51, 25.7], [51.51, 25.71], [51.5, 25.71], [51.5, 25.7]]],
