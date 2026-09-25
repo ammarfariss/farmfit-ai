@@ -16,7 +16,8 @@ describe("farm portfolio model", () => {
 
   it("keeps allocation inside usable area and percentages inside 100%", () => {
     const result = optimizePortfolio(input);
-    expect(result.totalAreaM2).toBeLessThanOrEqual(9400);
+    expect(result.availableAreaM2).toBeCloseTo(9400);
+    expect(result.totalAreaM2).toBeLessThanOrEqual(result.availableAreaM2);
     expect(result.allocations.reduce((sum, item) => sum + item.areaM2, 0)).toBeCloseTo(result.totalAreaM2);
     expect(result.allocations.reduce((sum, item) => sum + item.percentage, 0)).toBeLessThanOrEqual(1.000001);
     expect(result.waterM3).toBeGreaterThan(0);
