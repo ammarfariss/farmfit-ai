@@ -46,7 +46,7 @@ The current API route attempts to retrieve:
 
 If external requests fail, the prototype falls back to a clearly labelled demo climate baseline.
 
-**Important:** these environmental/context values are currently displayed to the user but are **not yet inputs to the portfolio scoring algorithm**.
+**Current site-aware behavior:** temperature and wind from NASA POWER plus soil pH from SoilGrids are passed into an explainable site-fit adjustment that can change crop/system ranking. Solar irradiation, humidity, nearby-road/market counts and Qatar Open Data catalog results are currently displayed as context but do not yet affect the score.
 
 ## Land / GIS status
 
@@ -62,18 +62,19 @@ It:
 
 1. filters incompatible crop/system pairs;
 2. scores valid pairs using a five-year economic score per unit area;
-3. ranks them;
-4. greedily allocates area to up to four crop/system combinations;
-5. scales the portfolio down when necessary to respect budget, water and energy limits;
-6. calculates shared infrastructure cost, annual profit, payback and 5-year ROI;
-7. applies a simple concentration-risk penalty when one allocation becomes too dominant.
+3. applies an explainable site-fit adjustment using temperature, wind and soil pH when available;
+4. ranks the adjusted crop/system pairs;
+5. greedily allocates area to up to four crop/system combinations;
+6. scales the portfolio down when necessary to respect budget, water and energy limits;
+7. calculates shared infrastructure cost, annual profit, payback and 5-year ROI;
+8. applies a simple concentration-risk penalty when one allocation becomes too dominant.
 
 It does **not** currently use:
 - ML training;
 - Pareto optimization;
-- a GLPK solver in the actual optimizer code;
+- a mathematical-programming solver;
 - thousands of exhaustively evaluated layouts;
-- environmental site data in the optimization objective.
+- parcel-level sensor measurements or a full agronomic simulation.
 
 ## Run locally
 
