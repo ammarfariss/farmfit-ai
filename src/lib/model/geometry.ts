@@ -6,13 +6,32 @@ export type LayoutBlock = { id: string; cropId: string; techniqueId: string; per
 
 export function buildLayout(feature: Feature<Polygon>, allocations: Array<{ cropId: string; techniqueId: string; percentage: number; areaM2: number }>): LayoutBlock[] {
   const ring = feature.geometry.coordinates[0];
-  const minX = Math.min(...ring.map(([x]) => x)); const maxX = Math.max(...ring.map(([x]) => x));
-  const minY = Math.min(...ring.map(([, y]) => y)); const maxY = Math.max(...ring.map(([, y]) => y));
+  const minX = Math.min(...ring.map(([x]) => x));
+  const maxX = Math.max(...ring.map(([x]) => x));
+  const minY = Math.min(...ring.map(([, y]) => y));
+  const maxY = Math.max(...ring.map(([, y]) => y));
+  const declaredPlotAreaM2 = typeof feature.properties?.areaM2 === "number" ? feature.properties.areaM2 : area(feature);
+
   let cursor = minX;
   return allocations.map((allocation, index) => {
     const width = (maxX - minX) * allocation.percentage;
     const block = polygon([[[cursor, minY], [cursor + width, minY], [cursor + width, maxY], [cursor, maxY], [cursor, minY]]]);
     cursor += width;
-    return { ...allocation, id: `block-${index}`, geometry: { ...block, properties: { cropId: allocation.cropId, techniqueId: allocation.techniqueId, percentage: allocation.percentage, areaM2: allocation.areaM2 } }, areaM2: area(block) };
+
+    const blockAreaM2 = declaredPlotAreaM2 * allocation.percentage;
+    return {
+      ...allocation,
+      id: `block-${index}`,
+      geometry: {
+        ...block,
+        properties: {
+          cropId: allocation.cropId,
+          techniqueId: allocation.techniqueId,
+          percentage: allocation.percentage,
+          areaM2: blockAreaM2,
+        },
+      },
+      areaM2: blockAreaM2,
+    };
   });
 }
