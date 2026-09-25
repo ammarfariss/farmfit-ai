@@ -5,25 +5,29 @@
 Built for **Reboot the Earth Global Tech Challenge 2026 — Doha, Qatar**  
 Challenge 1: **AI for Site/Facility Suitability and Crop/System Recommendation**
 
-## The Problem
+## What FarmFit Solves
 
 Farmers and agricultural investors with limited land must decide more than simply **what crop to grow**. They must also decide:
 
 - how much land to allocate to each crop;
 - which production technique to use;
 - how to stay within budget, water and energy constraints;
-- how to balance expected yield, revenue, operating cost, capital cost and risk; and
+- how to balance expected yield, revenue, CapEx, OpEx and risk; and
 - where each farm component should be placed.
 
-Optimizing every crop or technique independently can miss important interactions across the whole farm.
+FarmFit AI treats this as a **farm-portfolio optimization problem** rather than a collection of isolated recommendations.
 
-## Our Solution
+## Challenge Scope
 
-**FarmFit AI** treats the farm as a **portfolio optimization problem**.
+FarmFit is deliberately scoped to **Challenge 1**.
 
-The user selects one or more land plots, chooses crops and production techniques they can use, and defines constraints such as budget, water availability, energy availability and target return.
+It is designed around the three Challenge 1 themes:
 
-The system is designed to evaluate feasible **crop × production-technique × land-allocation combinations** and return a portfolio-level farm plan rather than a single crop recommendation.
+1. **Site suitability intelligence** — geographic and environmental context.
+2. **Crop / production-system recommendation** — open field, greenhouse, hydroponic, vertical farming and other supported systems.
+3. **Farm investment scenario planning** — yield, resources, CapEx, OpEx, revenue, payback and risk.
+
+**Cold-chain monitoring, shelf-life prediction and spoilage ML are not part of the canonical FarmFit scope.** Those belong to Challenge 2 and are excluded unless the team explicitly changes challenge.
 
 ## Core Workflow
 
@@ -34,18 +38,20 @@ Choose crops + production techniques
         ↓
 Set budget / water / energy / return constraints
         ↓
-Combine GIS, weather, soil, water and market inputs
+Load available site + scenario data
         ↓
-Evaluate feasible crop × technique × area combinations
+Check feasibility and suitability
+        ↓
+Evaluate crop × technique × land-allocation combinations
         ↓
 Portfolio optimization
         ↓
-2D spatial farm-management plan
+2D farm-management plan
         ↓
 Yield | Revenue | CapEx | OpEx | Water/Energy | Payback | Risk
 ```
 
-## User Inputs
+## Intended Inputs
 
 - One or multiple land plots
 - Candidate crops
@@ -54,11 +60,12 @@ Yield | Revenue | CapEx | OpEx | Water/Energy | Payback | Risk
 - Water constraint
 - Energy constraint
 - Optional return/risk preferences
+- Environmental and geographic inputs where available
+- Explicit financial and agronomic assumptions
 
 ## Intended Outputs
 
-- Recommended crop portfolio
-- Recommended production-system mix
+- Recommended crop/system portfolio
 - Land allocation by crop/system
 - 2D farm-management layout
 - Expected yield estimate
@@ -68,80 +75,57 @@ Yield | Revenue | CapEx | OpEx | Water/Energy | Payback | Risk
 - Water and energy-use estimates
 - Payback estimate
 - Risk indicators
+- Assumptions and trade-offs used to produce the result
 
-## Why It Is Different
+## Differentiation
 
-Many agricultural decision tools focus on **crop suitability** or assess one production option at a time.
+Many agricultural tools focus on crop suitability or evaluate one production option at a time.
 
-FarmFit AI is designed to optimize the **entire farm as a portfolio**, including the interactions between crop choice, production technique, land allocation, resource limits and economics.
+FarmFit is designed to optimize the **whole farm as a portfolio**, combining crop choice, production technique, area allocation, site constraints, resources and economics in one decision workflow.
 
 ## Responsible Decision Support
 
-FarmFit AI is a hackathon prototype and should be treated as **decision support**, not as agricultural, engineering, regulatory or financial advice.
+FarmFit is a hackathon prototype and should be treated as **decision support**, not agricultural, engineering, regulatory or investment advice.
 
-Outputs depend on the quality and spatial resolution of input data and on documented model assumptions. The project does not claim guaranteed yield, profit, payback, regulatory approval or farm-level accuracy where source data is coarse.
-
-See:
-
-- [Model Card](docs/MODEL_CARD.md)
-- [Assumptions](docs/ASSUMPTIONS.md)
-- [Limitations](docs/LIMITATIONS.md)
-
-## Data & Attribution
-
-The prototype may combine open/public geographic, weather, soil, water, market and agricultural datasets. Only sources actually integrated into the final prototype should be described as implemented.
-
-See:
-
-- [Data Sources](docs/DATA_SOURCES.md)
-- [Data Licences](docs/DATA_LICENSES.md)
-
-## Sustainability
-
-FarmFit is intended to make resource constraints visible during farm planning rather than optimizing financial return in isolation.
-
-Relevant themes include:
-
-- food production and food security;
-- water efficiency;
-- resource-aware agricultural planning;
-- innovation in agricultural infrastructure; and
-- transparent trade-offs between profitability, water use, energy use and risk.
-
-See [Sustainability](docs/SUSTAINABILITY.md).
+The project does not claim guaranteed yield, profit, payback, regulatory approval or parcel-level accuracy where source data are coarse. Implementation-specific claims must match the final code.
 
 ## Open Source
 
-FarmFit AI is released under the **MIT License**.
+FarmFit AI is released under the **MIT License**, an OSI-approved open-source licence.
 
-The project is being documented so that other teams, researchers and developers can inspect, adapt and extend the work.
+The repository is structured for inspection, reuse and adaptation. External datasets, APIs, map data and libraries keep their own licences and attribution requirements.
 
-## Architecture
+See:
 
-See [Architecture](docs/ARCHITECTURE.md).
+- [Open Source & DPG Readiness](docs/OPEN_SOURCE_AND_DPG.md)
+- [Data Licences & Attribution](docs/DATA_LICENSES.md)
+- [Contributing](CONTRIBUTING.md)
+- [Security](SECURITY.md)
+
+## Documentation
+
+- [Project Specification](docs/PROJECT_SPEC.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Model Card](docs/MODEL_CARD.md)
+- [Data Sources](docs/DATA_SOURCES.md)
+- [Data Licences](docs/DATA_LICENSES.md)
+- [Evidence Base](docs/EVIDENCE_BASE.md)
+- [Assumptions](docs/ASSUMPTIONS.md)
+- [Limitations](docs/LIMITATIONS.md)
+- [Sustainability](docs/SUSTAINABILITY.md)
+- [Judging Alignment](docs/JUDGING_ALIGNMENT.md)
 
 ## Prototype Status
 
 **Active hackathon development.**
 
-Implementation-specific claims in this repository will be updated to match the final working prototype before submission.
+The documentation distinguishes between:
 
-## Repository Structure
+- **verified external facts**;
+- **intended product behavior**; and
+- **features actually implemented in the prototype**.
 
-```text
-farmfit-ai/
-├── README.md
-├── LICENSE
-├── docs/
-│   ├── ARCHITECTURE.md
-│   ├── DATA_SOURCES.md
-│   ├── DATA_LICENSES.md
-│   ├── ASSUMPTIONS.md
-│   ├── LIMITATIONS.md
-│   ├── MODEL_CARD.md
-│   └── SUSTAINABILITY.md
-└── ... prototype code added by the development team
-```
+Before submission, the README, model card, data register and run instructions must be reconciled against the final code.
 
 ## Hackathon
 
