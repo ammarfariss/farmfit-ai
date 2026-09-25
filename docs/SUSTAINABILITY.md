@@ -1,47 +1,63 @@
 # Sustainability and SDG Alignment
 
-FarmFit AI is intended to make environmental and resource constraints visible during agricultural planning.
+FarmFit AI is intended to make environmental and resource constraints visible during agricultural planning rather than optimizing financial return in isolation.
 
-## Strongest SDG Connections
+## Primary SDG Alignment
 
 ### SDG 2 — Zero Hunger
+**Target 2.4** focuses on sustainable food-production systems and resilient agricultural practices.
 
-The project supports planning for productive and resilient food-production systems.
+FarmFit can support this direction by comparing production systems and exposing site/resource constraints before investment.
 
 ### SDG 6 — Clean Water and Sanitation
+**Target 6.4** calls for increased water-use efficiency and sustainable withdrawals.
 
-Water availability and use can be included as explicit planning constraints rather than ignored.
+FarmFit can represent water as an explicit constraint and comparison metric.
 
 ### SDG 9 — Industry, Innovation and Infrastructure
+Relevant themes include resilient infrastructure, resource efficiency and technological innovation.
 
-The project applies digital optimization and geographic data to agricultural infrastructure planning.
+FarmFit applies geospatial data and transparent optimization to agricultural infrastructure planning.
 
 ### SDG 12 — Responsible Consumption and Production
+**Target 12.2** concerns sustainable management and efficient use of natural resources.
 
-FarmFit is designed to compare production options using resource use as well as financial outputs.
+FarmFit compares resource demand alongside economics rather than assuming the highest-revenue system is automatically the best.
 
-## Potential SDG 13 Connection
+## Evidence-Based Water Claim
 
-Climate and environmental constraints can inform adaptation-oriented farm planning. The project should avoid claiming direct emissions reductions unless these are measured.
+FAO has reported that hydroponics **can use up to 90% less water than conventional cultivation** in an example published in 2026.
 
-## Trade-offs
+This is a context-dependent upper-bound example, **not a guaranteed FarmFit saving**. Actual performance depends on crop, system design, recycling, climate and management.
 
-Sustainability is not automatic.
+## Sustainability Trade-offs
+
+Controlled-environment agriculture can reduce land/water pressure while increasing other demands.
 
 Potential trade-offs include:
 
-- greenhouse cooling energy demand;
-- high electricity demand from vertical farming;
-- capital intensity of controlled-environment agriculture;
+- greenhouse cooling energy;
+- vertical-farm lighting electricity;
 - desalination/water-energy interactions;
-- equipment and infrastructure material use;
-- maintenance and filtration requirements;
-- possible exclusion of small farmers if only high-CapEx systems are optimized.
+- high upfront capital;
+- equipment/material footprint;
+- maintenance and filtration;
+- affordability and access for small farmers.
 
 ## Design Principle
 
-The optimization should not treat maximum revenue as the only objective when water, energy, risk and resource efficiency are relevant constraints.
+The optimizer should make trade-offs visible. If revenue, water, energy and risk are combined into one score, weights must be transparent and editable or at least documented.
 
-## Scaling
+## Claims We Do Not Make
 
-A scalable version should allow weights, constraints, crops, production systems and datasets to be adapted to other arid regions rather than hard-coding one universal farm model.
+Unless directly measured by the prototype, FarmFit does not claim:
+
+- guaranteed water savings;
+- guaranteed emissions reductions;
+- guaranteed yield increase;
+- guaranteed profit;
+- direct reduction of national food loss.
+
+## Scalability
+
+A scalable version should allow crops, systems, constraints, weights and data layers to be replaced for other arid or climate-stressed regions without rewriting the core decision logic.
