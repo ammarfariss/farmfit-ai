@@ -14,6 +14,7 @@ Next.js client UI
 Deterministic portfolio optimizer
   ├─ Compatibility filter
   ├─ Economic pair scoring
+  ├─ Explainable site-fit adjustment (temperature / wind / pH)
   ├─ Greedy area allocation
   ├─ Resource-limit scaling
   ├─ Shared-infrastructure calculation
@@ -25,7 +26,6 @@ Results UI
   ├─ Portfolio shares
   └─ 2D MapLibre allocation visualization
 
-Separately:
 Selected plot centroid
         ↓
 Next.js /api/site-data
@@ -34,14 +34,15 @@ Next.js /api/site-data
   ├─ SoilGrids pH
   └─ Qatar Open Data catalog search
         ↓
-Site-context panel
+  ├─ temperature / wind / pH → optimizer site-fit adjustment
+  └─ full context → site-context panel
 ```
 
 ## Important architectural boundary
 
-The **site-context API is currently separate from the optimizer**.
+The site-context API now feeds **temperature, wind and soil pH** into the optimizer's explainable ranking step.
 
-The optimizer uses crop/system assumptions and user resource limits; it does not yet consume the fetched NASA/soil/OSM values.
+Solar irradiation, humidity, OpenStreetMap market/road counts and Qatar Open Data catalog results remain informational context only.
 
 ## Front end
 
@@ -66,6 +67,7 @@ File:
 Current method:
 - compatibility filtering;
 - deterministic economic ranking;
+- explainable temperature/wind/pH site-fit adjustment;
 - greedy allocation;
 - uniform scaling to resource limits.
 
