@@ -38,6 +38,7 @@ export type PortfolioResult = {
   energyKwh: number;
   paybackYears: number;
   roi5Year: number;
+  roi5YearRevenueStress: number;
   sharedInfrastructureQar: number;
   siteFitPct: number | null;
   siteContextUsed: boolean;
@@ -62,30 +63,36 @@ function siteSuitability(input: OptimizerInput, cropId: CropId, techniqueId: Tec
   const temperatureRange = crop.temperature.match(/-?\d+(?:\.\d+)?/g)?.map(Number) ?? [];
   const [minTemp, maxTemp] = temperatureRange;
 
-  let temperatureFit = 1;
+  let weightedFit = 0;
+  let availableWeight = 0;
+
   if (finite(input.siteContext?.temperatureC) && Number.isFinite(minTemp) && Number.isFinite(maxTemp)) {
     const temperature = input.siteContext!.temperatureC!;
     const distance = temperature < minTemp ? minTemp - temperature : temperature > maxTemp ? temperature - maxTemp : 0;
     const protection = techniqueId === "open-field" ? 1 : techniqueId === "greenhouse" ? 0.55 : techniqueId === "hydroponic" ? 0.35 : 0.25;
-    temperatureFit = clamp(1 - distance * 0.055 * protection, 0.55, 1);
+    const temperatureFit = clamp(1 - distance * 0.055 * protection, 0.55, 1);
+    weightedFit += 0.55 * temperatureFit;
+    availableWeight += 0.55;
   }
 
-  let soilFit = 1;
   if (finite(input.siteContext?.soilPh)) {
     const ph = input.siteContext!.soilPh!;
     const distance = ph < 5.8 ? 5.8 - ph : ph > 7.2 ? ph - 7.2 : 0;
     const soilDependency = techniqueId === "open-field" ? 1 : techniqueId === "greenhouse" ? 0.5 : 0.1;
-    soilFit = clamp(1 - distance * 0.11 * soilDependency, 0.6, 1);
+    const soilFit = clamp(1 - distance * 0.11 * soilDependency, 0.6, 1);
+    weightedFit += 0.3 * soilFit;
+    availableWeight += 0.3;
   }
 
-  let windFit = 1;
   if (finite(input.siteContext?.windMps)) {
     const excess = Math.max(0, input.siteContext!.windMps! - 4.5);
     const windExposure = techniqueId === "open-field" ? 1 : techniqueId === "greenhouse" ? 0.45 : techniqueId === "hydroponic" ? 0.35 : 0.25;
-    windFit = clamp(1 - excess * 0.04 * windExposure, 0.65, 1);
+    const windFit = clamp(1 - excess * 0.04 * windExposure, 0.65, 1);
+    weightedFit += 0.15 * windFit;
+    availableWeight += 0.15;
   }
 
-  return 0.55 * temperatureFit + 0.3 * soilFit + 0.15 * windFit;
+  return availableWeight > 0 ? weightedFit / availableWeight : 1;
 }
 
 function economics(input: OptimizerInput, cropId: CropId, techniqueId: TechniqueId, areaM2: number) {
@@ -150,6 +157,7 @@ function emptyResult(input: OptimizerInput, usableArea: number, message: string)
     energyKwh: 0,
     paybackYears: Infinity,
     roi5Year: 0,
+    roi5YearRevenueStress: 0,
     sharedInfrastructureQar: 0,
     siteFitPct: null,
     siteContextUsed: hasSiteContext(input.siteContext),
@@ -275,6 +283,8 @@ export function optimizePortfolio(input: OptimizerInput): PortfolioResult {
   const maxAllocatedShare = totals.areaM2 > 0 ? Math.max(...allocations.map((item) => item.areaM2 / totals.areaM2)) : 0;
   const riskPenalty = maxAllocatedShare > MODEL_ASSUMPTIONS.concentrationRiskThreshold ? MODEL_ASSUMPTIONS.concentrationRiskPenalty : 0;
   const roi5Year = (annualProfitQar * 5 - capexQar) / Math.max(capexQar, 1) - riskPenalty;
+  const stressAnnualProfitQar = totals.annualRevenueQar * 0.8 - totals.annualOpexQar - utilityCostQar;
+  const roi5YearRevenueStress = (stressAnnualProfitQar * 5 - capexQar) / Math.max(capexQar, 1) - riskPenalty;
 
   const siteContextUsed = hasSiteContext(input.siteContext);
   const siteFitPct = siteContextUsed && totals.areaM2 > 0
@@ -309,6 +319,7 @@ export function optimizePortfolio(input: OptimizerInput): PortfolioResult {
     energyKwh: totals.energyKwh,
     paybackYears: annualProfitQar > 0 ? capexQar / annualProfitQar : Infinity,
     roi5Year,
+    roi5YearRevenueStress,
     sharedInfrastructureQar,
     siteFitPct,
     siteContextUsed,
