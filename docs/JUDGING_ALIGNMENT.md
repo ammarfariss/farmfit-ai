@@ -21,7 +21,7 @@ The strongest differentiation is **portfolio-level allocation**:
 
 > FarmFit does not only ask “which crop?” It asks how limited land should be divided across crops and production systems under financial and resource limits.
 
-Do not overstate the current site-intelligence integration: site context is displayed but not yet used in the optimizer.
+Site intelligence now affects ranking through an explainable temperature/wind/soil-pH site-fit adjustment. Be precise that market access, solar/humidity and Qatar catalog data remain contextual rather than scored.
 
 ## 3. Ambition & Scope
 
@@ -44,6 +44,7 @@ Repository evidence now includes:
 - explicit assumptions;
 - automated Vitest tests;
 - live API integrations with fallbacks;
+- explainable site-aware ranking using temperature, wind and soil pH;
 - MapLibre/Turf geospatial rendering;
 - exact local run instructions.
 
