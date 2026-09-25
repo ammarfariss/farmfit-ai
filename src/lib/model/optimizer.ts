@@ -56,9 +56,36 @@ export function optimizePortfolio(input: OptimizerInput): PortfolioResult {
   }
 
   const candidateCapex = allocations.reduce((sum, item) => sum + item.capexQar, 0);
-  const fixedInfrastructureQar = (MODEL_ASSUMPTIONS.sharedWaterInfrastructureQar + MODEL_ASSUMPTIONS.sharedEnergyInfrastructureQar + MODEL_ASSUMPTIONS.sharedCoolingInfrastructureQar) * (1 - MODEL_ASSUMPTIONS.sharedInfrastructureDiscount);
   const candidateWater = allocations.reduce((sum, item) => sum + item.waterM3, 0);
   const candidateEnergy = allocations.reduce((sum, item) => sum + item.energyKwh, 0);
+
+  const plannedInfrastructureTypes = new Set(allocations.map((allocation) => TECHNIQUES.find((technique) => technique.id === allocation.techniqueId)!.infrastructure));
+  const plannedSharedInfrastructureQar =
+    (plannedInfrastructureTypes.has("water") || plannedInfrastructureTypes.has("water-energy") || plannedInfrastructureTypes.has("water-energy-cooling") ? MODEL_ASSUMPTIONS.sharedWaterInfrastructureQar : 0) +
+    (plannedInfrastructureTypes.has("water-energy") || plannedInfrastructureTypes.has("water-energy-cooling") ? MODEL_ASSUMPTIONS.sharedEnergyInfrastructureQar : 0) +
+    (plannedInfrastructureTypes.has("water-energy-cooling") ? MODEL_ASSUMPTIONS.sharedCoolingInfrastructureQar : 0);
+  const fixedInfrastructureQar = plannedSharedInfrastructureQar * (1 - MODEL_ASSUMPTIONS.sharedInfrastructureDiscount);
+
+  if (input.budgetQar < fixedInfrastructureQar) {
+    return {
+      allocations: [],
+      totalAreaM2: 0,
+      capexQar: 0,
+      annualOpexQar: 0,
+      annualRevenueQar: 0,
+      annualProfitQar: 0,
+      annualYieldKg: 0,
+      waterM3: 0,
+      energyKwh: 0,
+      paybackYears: Infinity,
+      roi5Year: 0,
+      sharedInfrastructureQar: 0,
+      explanations: [
+        `No feasible portfolio fits the QAR ${input.budgetQar.toLocaleString()} budget with the selected production systems.`,
+        "Increase the budget or choose a lower-infrastructure production system.",
+      ],
+    };
+  }
 
   const resourceScale = Math.min(
     1,
@@ -95,11 +122,20 @@ export function optimizePortfolio(input: OptimizerInput): PortfolioResult {
   const riskPenalty = allocations.length && Math.max(...allocations.map((item) => item.percentage)) > MODEL_ASSUMPTIONS.concentrationRiskThreshold ? 0.06 : 0;
   const roi5Year = (annualProfitQar * 5 - capexQar) / Math.max(capexQar, 1) - riskPenalty;
 
+  const lead = allocations[0];
+  const leadCrop = lead ? CROPS.find((crop) => crop.id === lead.cropId)?.name : "The lead crop";
+  const leadTechnique = lead ? TECHNIQUES.find((technique) => technique.id === lead.techniqueId)?.name : "production system";
+  const usesHydroponics = allocations.some((item) => item.techniqueId === "hydroponic" || item.techniqueId === "vertical");
+
   const explanations = [
-    "Hydroponics was allocated where its water efficiency offsets higher energy demand.",
-    `${allocations[0]?.cropId ? CROPS.find((crop) => crop.id === allocations[0].cropId)?.name : "The lead crop"} uses the highest-value block in the portfolio.`,
-    `Shared infrastructure reduces the combined CapEx by ${Math.round(MODEL_ASSUMPTIONS.sharedInfrastructureDiscount * 100)}%.`,
-    `The plan stays within the QAR ${input.budgetQar.toLocaleString()} budget and resource limits.`,
+    `${leadCrop} with ${leadTechnique} receives the highest-value block under the current assumptions.`,
+    usesHydroponics
+      ? "Hydroponic production appears in the portfolio where its lower water demand can justify higher energy and capital intensity."
+      : "The selected portfolio favors non-hydroponic systems under the current crop, budget, water and energy limits.",
+    `Shared infrastructure is modelled with a ${Math.round(MODEL_ASSUMPTIONS.sharedInfrastructureDiscount * 100)}% prototype discount.`,
+    resourceScale < 1
+      ? "The initial allocation was scaled down to remain inside the selected budget, water and energy limits."
+      : `The plan stays within the QAR ${input.budgetQar.toLocaleString()} budget and selected resource limits.`,
   ];
 
   return {
