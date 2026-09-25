@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
   nasaUrl.searchParams.set("latitude", latitude.toString());
   nasaUrl.searchParams.set("format", "JSON");
 
-  const overpassQuery = `[out:json][timeout:6];(nwr(around:3000,${latitude},${longitude})["shop"~"supermarket|greengrocer|market"];nwr(around:3000,${latitude},${longitude})["highway"~"primary|secondary|tertiary"];);out center tags;`;
+  const overpassQuery = `[out:json][timeout:6];(nwr(around:3000,${latitude},${longitude})["shop"~"supermarket|greengrocer|market"];nwr(around:3000,${latitude},${longitude})["amenity"="marketplace"];nwr(around:3000,${latitude},${longitude})["highway"~"primary|secondary|tertiary"];);out center tags;`;
 
   const soilUrl = new URL("https://rest.isric.org/soilgrids/v2.0/properties/query");
   soilUrl.searchParams.set("lon", longitude.toString());
@@ -147,10 +147,10 @@ function readQatarCatalog(data: { results?: Array<{ dataset?: { dataset_id?: str
 
 function summarizeNearby(data: { elements?: Array<{ tags?: Record<string, string>; center?: { lat: number; lon: number }; lat?: number; lon?: number }> }) {
   const elements = data.elements ?? [];
-  const marketElements = elements.filter((element) => Boolean(element.tags?.shop));
+  const marketElements = elements.filter((element) => Boolean(element.tags?.shop) || element.tags?.amenity === "marketplace");
   const places = marketElements.slice(0, 5).map((element) => ({
     name: element.tags?.name ?? "Unnamed market",
-    type: element.tags?.shop ?? "market",
+    type: element.tags?.shop ?? element.tags?.amenity ?? "market",
     latitude: element.center?.lat ?? element.lat,
     longitude: element.center?.lon ?? element.lon,
   }));
