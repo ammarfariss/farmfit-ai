@@ -15,8 +15,8 @@ Deterministic portfolio optimizer
   ├─ Compatibility filter
   ├─ Economic pair scoring
   ├─ Explainable site-fit adjustment (temperature / wind / pH)
-  ├─ Greedy area allocation
-  ├─ Resource-limit scaling
+  ├─ Minimum-viable zone seeding
+  ├─ Direct constrained growth (land / budget / water / energy)
   ├─ Shared-infrastructure calculation
   └─ ROI / payback / explanation generation
         ↓
@@ -68,8 +68,9 @@ Current method:
 - compatibility filtering;
 - deterministic economic ranking;
 - explainable temperature/wind/pH site-fit adjustment;
-- greedy allocation;
-- uniform scaling to resource limits.
+- minimum-viable zone seeding;
+- direct constrained growth without post-scaling below minimum areas;
+- binding-constraint reporting.
 
 ## External data route
 
@@ -77,7 +78,7 @@ File:
 
 `src/app/api/site-data/route.ts`
 
-External requests are server-side and use graceful fallbacks.
+External requests are server-side, independently timeout, preserve partial successes, and expose source-readiness status to the UI.
 
 ## Optional cadastral adapter
 
