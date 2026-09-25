@@ -74,6 +74,22 @@ describe("farm portfolio model", () => {
     expect(blocks[0].geometry.geometry.coordinates[0][2][0]).toBeCloseTo(blocks[1].geometry.geometry.coordinates[0][0][0]);
   });
 
+  it("does not treat missing site factors as perfect data", () => {
+    const result = optimizePortfolio({
+      ...input,
+      crops: ["lettuce"] as const,
+      techniques: ["open-field"] as const,
+      siteContext: { temperatureC: 34 },
+    });
+    expect(result.siteFitPct).not.toBeNull();
+    expect(result.siteFitPct!).toBeLessThan(80);
+  });
+
+  it("reports a lower ROI under the -20% revenue stress case", () => {
+    const result = optimizePortfolio(input);
+    expect(result.roi5YearRevenueStress).toBeLessThan(result.roi5Year);
+  });
+
   it("uses the documented 94% usable-area factor for map labels", () => {
     const plot = polygon(
       [[[51.5, 25.7], [51.51, 25.7], [51.51, 25.71], [51.5, 25.71], [51.5, 25.7]]],
