@@ -1,58 +1,40 @@
 # Data Sources
 
-This file separates **verified candidate sources** from **sources actually implemented**.
+This register reflects the code currently in the repository.
 
-## Rule
+| Source | Current use in code | Variables / output | Status |
+|---|---|---|---|
+| NASA POWER climatology API | Site-context API | T2M, ALLSKY_SFC_SW_DWN, RH2M, WS2M | **Implemented** |
+| OpenStreetMap / Overpass API | Site-context API | nearby supermarket/greengrocer/market features; primary/secondary/tertiary roads within 3 km | **Implemented** |
+| SoilGrids REST API | Site-context API | pH at 0–5 cm when available | **Implemented with graceful fallback** |
+| Qatar Open Data catalog API | Dataset discovery only | dataset IDs/titles from a catalog search | **Implemented, but no dataset values are ingested** |
+| CARTO Positron basemap | Map visualization | basemap tiles/style | **Implemented** |
+| Demo Al Khor plot polygons | Plot selection and map demo | 3 representative polygons and declared areas | **Implemented demo data** |
+| Qatar cadastral FeatureServer | Optional adapter in `qatar-gis.ts` | GeoJSON parcels | **Prepared but not wired into UI** |
 
-A source is only marked **Implemented** when the final prototype code actually calls, reads or embeds it.
+## Critical interpretation
 
-## Verified Candidate Source Register
+The external climate, soil and market-access context is currently **display-only**. It is not yet passed into `optimizePortfolio()`.
 
-| Source | Potential Use | What is Verified | Important Caveat | Final Status |
-|---|---|---|---|---|
-| NASA POWER Daily API | Solar / meteorological context | Official API returns analysis-ready daily solar and meteorological data | Grid data are not farm sensors; document parameter and resolution used | Verify after code push |
-| NASA MERRA-2 M2T1NXAER | Regional dust / aerosol indicator | Official MERRA-2 aerosol-diagnostics collection exists | Coarse reanalysis; use only as a **regional exposure indicator**, not parcel-level dust measurement | Verify after code push |
-| FAO GloSIS | Soil-information discovery | Official FAO Global Soil Information System exists | Dataset coverage varies by country and layer | Verify after code push |
-| FAO GSASmap | Salinity context | Includes EC/ESP/pH salt-affected-soil information | FAO notes data gaps in the Near East and North Africa region; do not assume Qatar parcel coverage | Verify after code push |
-| OpenStreetMap | Roads / geographic / market-access context | Open map data under ODbL | Attribution required; tile-service terms are separate | Verify after code push |
-| Qatar public/open data | Qatar-specific agricultural or GIS context | Potentially valuable for local calibration | Exact dataset URL, licence and variable must be recorded before claiming use | TBD |
-| User-entered / scenario parameters | CapEx, OpEx, crop price, system assumptions | Transparent editable assumptions can be used where verified local data are unavailable | Must be labelled assumptions, not measured facts | Likely |
+Therefore the final pitch should say:
 
-## Commercial / Non-Open Services
+> “FarmFit combines a working portfolio optimizer with live site-context data.”
 
-### Mapbox
-Mapbox Directions, Matrix and Isochrone APIs can provide traffic-aware travel-time information, but Mapbox is a commercial token-based service.
+Do **not** yet say:
 
-If Mapbox is used:
+> “The optimizer changes its recommendation based on NASA/soil/market data.”
 
-- disclose it explicitly;
-- document its terms separately;
-- do not describe it as an open-source dependency;
-- keep the FarmFit core optimizer portable where practical.
+That would require connecting these variables directly to the decision engine.
 
-## Candidate Source References
+## Source provenance in code
 
-- NASA POWER Daily API: https://power.larc.nasa.gov/docs/services/api/temporal/daily/
-- NASA POWER referencing guide: https://power.larc.nasa.gov/docs/referencing/
-- NASA MERRA-2 product documentation: https://gmao.gsfc.nasa.gov/gmao-products/merra-2/
-- FAO GloSIS: https://data.apps.fao.org/glosis/
-- FAO GSASmap: https://www.fao.org/global-soil-partnership/soil-data/global-map-of-salt-affected-soils-gsasmap/en
-- OpenStreetMap licence: https://www.openstreetmap.org/copyright
-- Mapbox navigation APIs: https://docs.mapbox.com/api/navigation/
+- NASA POWER endpoint: `src/app/api/site-data/route.ts`
+- Overpass API: `src/app/api/site-data/route.ts`
+- SoilGrids endpoint: `src/app/api/site-data/route.ts`
+- Qatar Open Data catalog: `src/app/api/site-data/route.ts`
+- Demo plot polygons: `src/lib/data/demo-plots.ts`
+- Optional cadastral adapter: `src/lib/data/qatar-gis.ts`
 
-## Final Submission Checklist
+## Submission rule
 
-For every implemented source record:
-
-1. exact source name;
-2. direct source/API link;
-3. exact variables used;
-4. access date;
-5. spatial/temporal resolution;
-6. preprocessing;
-7. licence / terms;
-8. attribution text;
-9. uncertainty / limitations;
-10. code file where the source is used.
-
-The presentation, README and code must use the same source list.
+Any source named in the presentation must match an actual code path or be explicitly labelled “future integration”.
