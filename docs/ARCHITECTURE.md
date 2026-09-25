@@ -1,97 +1,92 @@
 # Architecture
 
-FarmFit AI is designed as a **Challenge 1 agricultural decision-support and portfolio-optimization system**.
-
-## Canonical Flow
+## Current MVP flow
 
 ```text
-1. Plot Selection
-   ↓
-2. Candidate Crops + Production Systems
-   ↓
-3. Budget / Water / Energy / Return Constraints
-   ↓
-4. Site & Scenario Data
-   ↓
-5. Feasibility / Suitability Checks
-   ↓
-6. Portfolio Optimization
-   ↓
-7. Financial + Resource Calculations
-   ↓
-8. Spatial Allocation
-   ↓
-9. Explainable 2D Plan + Metrics
+User
+  ↓
+Next.js client UI
+  ├─ Demo plot selection
+  ├─ Crop selection
+  ├─ Technique selection
+  └─ Budget / water / energy limits
+        ↓
+Deterministic portfolio optimizer
+  ├─ Compatibility filter
+  ├─ Economic pair scoring
+  ├─ Greedy area allocation
+  ├─ Resource-limit scaling
+  ├─ Shared-infrastructure calculation
+  └─ ROI / payback / explanation generation
+        ↓
+Results UI
+  ├─ Financial metrics
+  ├─ Resource metrics
+  ├─ Portfolio shares
+  └─ 2D MapLibre allocation visualization
+
+Separately:
+Selected plot centroid
+        ↓
+Next.js /api/site-data
+  ├─ NASA POWER climatology
+  ├─ OSM Overpass
+  ├─ SoilGrids pH
+  └─ Qatar Open Data catalog search
+        ↓
+Site-context panel
 ```
 
-## Logical Components
+## Important architectural boundary
 
-### 1. Map / Plot Selection
-Captures the land considered by the user. Prefer open geospatial formats such as GeoJSON.
+The **site-context API is currently separate from the optimizer**.
 
-### 2. Data Layer
-Potential inputs include:
+The optimizer uses crop/system assumptions and user resource limits; it does not yet consume the fetched NASA/soil/OSM values.
 
-- solar and meteorological conditions;
-- dust / aerosol exposure;
-- soil / salinity indicators;
-- water constraints;
-- roads / market-access context;
-- crop/system parameters;
-- financial assumptions.
+## Front end
 
-Only sources actually used by the final code should be described as implemented.
+- Next.js
+- React
+- TypeScript
+- Recharts
+- MapLibre GL
 
-### 3. Constraint Engine
-Tests whether a candidate allocation violates constraints such as:
+## Geospatial
 
-- total area;
-- CapEx budget;
-- water use;
-- energy use;
-- suitability thresholds;
-- user-selected system/crop availability.
+- Demo GeoJSON plot polygons
+- MapLibre rendering
+- Turf area/helpers for layout geometry
 
-### 4. Portfolio Optimizer
-Evaluates combinations across the **whole farm**, rather than selecting a single crop independently.
+## Optimizer
 
-The exact final algorithm must be documented after the prototype code is integrated. Acceptable implementations may include enumeration/search, mathematical programming, heuristics or another transparent constrained optimizer.
+File:
 
-### 5. Finance / Resource Engine
-Produces scenario estimates for:
+`src/lib/model/optimizer.ts`
 
-- expected yield;
-- revenue;
-- CapEx;
-- OpEx;
-- water demand;
-- energy demand;
-- payback;
-- risk / uncertainty indicators.
+Current method:
+- compatibility filtering;
+- deterministic economic ranking;
+- greedy allocation;
+- uniform scaling to resource limits.
 
-### 6. Layout Engine
-Converts the selected portfolio into a 2D allocation plan. The layout is a planning visualization, not an engineering design.
+## External data route
 
-### 7. UI / Reporting
-Shows:
+File:
 
-- selected assumptions;
-- chosen portfolio;
-- constraints;
-- trade-offs;
-- outputs;
-- warnings and limitations.
+`src/app/api/site-data/route.ts`
 
-## Open-Source Architecture Principle
+External requests are server-side and use graceful fallbacks.
 
-Core decision logic should not depend on a proprietary service where an open alternative is practical.
+## Optional cadastral adapter
 
-For mapping, **Leaflet + OpenStreetMap** is an appropriate open foundation if used by the prototype. A commercial routing API such as Mapbox may be used only if clearly disclosed and should not be described as open source.
+`src/lib/data/qatar-gis.ts` contains an environment-variable-based FeatureServer adapter.
 
-## Challenge Boundary
+It is currently not used by the main page or map component.
 
-Cold-chain sensor ingestion, spoilage prediction and shelf-life ML are excluded from this architecture because they are Challenge 2 features.
+## Testing
 
-## Implementation Status
-
-This document describes the canonical target architecture. It must be reconciled against the final repository code before submission.
+`src/lib/model/optimizer.test.ts` tests:
+- positive financial outputs;
+- usable-area constraints;
+- budget/water/energy limits;
+- contiguous simple geometry blocks.
