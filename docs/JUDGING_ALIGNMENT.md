@@ -48,8 +48,8 @@ Repository evidence now includes:
 - exact local run instructions.
 
 ### Verified build health — 25 Sep 2026
-- `npm test`: **5 tests passing** after consistency fixes.
-- `npm run build`: production build previously verified successful before the consistency patch; rerun once locally after pulling the latest commit.
+- `npm test`: **5/5 tests passing** after consistency fixes.
+- `npm run build`: **production build compiled successfully** after the consistency patch.
 
 ## 5. Communication & Impact
 
@@ -89,8 +89,8 @@ controlled-environment systems may save water while increasing energy and capita
 
 ## Final submission gate
 
-- [ ] latest `npm test` passes after final patch
-- [ ] latest `npm run build` passes after final patch
+- [x] latest `npm test` passes after final patch — 5/5 tests passed on 25 Sep 2026
+- [x] latest `npm run build` passes after final patch — production build compiled successfully on 25 Sep 2026
 - [x] previous test run passed 4/4 before the consistency patch
 - [x] previous production build compiled successfully before the consistency patch
 - [x] MIT licence present
