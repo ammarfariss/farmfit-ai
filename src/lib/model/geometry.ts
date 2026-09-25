@@ -1,6 +1,7 @@
 import type { Feature, Polygon } from "geojson";
 import { area } from "@turf/area";
 import { polygon } from "@turf/helpers";
+import { MODEL_ASSUMPTIONS } from "./assumptions";
 
 export type LayoutBlock = { id: string; cropId: string; techniqueId: string; percentage: number; areaM2: number; geometry: Feature<Polygon> };
 
@@ -11,6 +12,7 @@ export function buildLayout(feature: Feature<Polygon>, allocations: Array<{ crop
   const minY = Math.min(...ring.map(([, y]) => y));
   const maxY = Math.max(...ring.map(([, y]) => y));
   const declaredPlotAreaM2 = typeof feature.properties?.areaM2 === "number" ? feature.properties.areaM2 : area(feature);
+  const usablePlotAreaM2 = declaredPlotAreaM2 * MODEL_ASSUMPTIONS.usableAreaFactor;
 
   let cursor = minX;
   return allocations.map((allocation, index) => {
@@ -18,7 +20,7 @@ export function buildLayout(feature: Feature<Polygon>, allocations: Array<{ crop
     const block = polygon([[[cursor, minY], [cursor + width, minY], [cursor + width, maxY], [cursor, maxY], [cursor, minY]]]);
     cursor += width;
 
-    const blockAreaM2 = declaredPlotAreaM2 * allocation.percentage;
+    const blockAreaM2 = usablePlotAreaM2 * allocation.percentage;
     return {
       ...allocation,
       id: `block-${index}`,
