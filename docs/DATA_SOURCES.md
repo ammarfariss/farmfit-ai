@@ -4,8 +4,8 @@ This register reflects the code currently in the repository.
 
 | Source | Current use in code | Variables / output | Status |
 |---|---|---|---|
-| NASA POWER climatology API | Site-context API + ranking input | Temperature and wind influence site-fit; solar/humidity are displayed | **Implemented** |
-| OpenStreetMap / Overpass API | Site-context API | nearby supermarket/greengrocer/market features; primary/secondary/tertiary roads within 3 km | **Implemented as context; not yet scored** |
+| NASA POWER climatology API | Site-context API + ranking input | Temperature and wind influence site-fit; solar/humidity are displayed | **Implemented with timeout + fallback** |
+| OpenStreetMap / Overpass API | Site-context API | nearby supermarket/greengrocer/market features; primary/secondary/tertiary roads within 3 km | **Implemented as context with timeout; not yet scored** |
 | SoilGrids REST API | Site-context API + ranking input | pH at 0–5 cm when available; production systems have different soil dependence | **Implemented with graceful fallback** |
 | Qatar Open Data catalog API | Dataset discovery only | dataset IDs/titles from a catalog search | **Implemented, but no dataset values are ingested** |
 | CARTO Positron basemap | Map visualization | basemap tiles/style | **Implemented** |
@@ -36,3 +36,7 @@ Safe pitch wording:
 ## Submission rule
 
 Any source named in the presentation must match an actual code path or be explicitly labelled “future integration”.
+
+## Resilience behavior
+
+Each external request is handled independently. A slow or unavailable provider does not force the whole site-data request to fail. The API returns per-source readiness so the UI can show how many live sources are available. NASA climate falls back to a labelled demo baseline when unavailable; missing SoilGrids/OSM/Qatar data remain visibly unavailable rather than being invented.
