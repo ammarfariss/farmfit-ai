@@ -47,6 +47,10 @@ Repository evidence now includes:
 - MapLibre/Turf geospatial rendering;
 - exact local run instructions.
 
+### Verified build health — 25 Sep 2026
+- `npm test`: **5 tests passing** after consistency fixes.
+- `npm run build`: production build previously verified successful before the consistency patch; rerun once locally after pulling the latest commit.
+
 ## 5. Communication & Impact
 
 Pitch the working flow, not the future roadmap.
@@ -68,8 +72,8 @@ Present:
 - contribution and security docs.
 
 Before submission, confirm:
-- `npm test` passes;
-- `npm run build` passes;
+- latest `npm test` passes;
+- latest `npm run build` passes;
 - no credentials are committed.
 
 ## 7. Sustainability & SDGs
@@ -85,8 +89,10 @@ controlled-environment systems may save water while increasing energy and capita
 
 ## Final submission gate
 
-- [ ] `npm test` passes
-- [ ] `npm run build` passes
+- [ ] latest `npm test` passes after final patch
+- [ ] latest `npm run build` passes after final patch
+- [x] previous test run passed 4/4 before the consistency patch
+- [x] previous production build compiled successfully before the consistency patch
 - [x] MIT licence present
 - [x] README run instructions present
 - [x] Challenge 2 claims removed from core story
